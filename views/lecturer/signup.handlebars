@@ -1,0 +1,141 @@
+<div class="signup">
+  <form class="form-horizontal" action="/lecturer/signup" method="POST">
+
+
+  <div class="form-group">
+    <label class="control-label col-md-2" for="firstname">Firstname</label>
+    <div class="col-md-10">
+      <input type="text" name="firstName" class="form-control" id="firstname" value="{{firstName}}"/>
+    </div>
+    <!-- This is used by the frontend javascript-->
+      <div class="col-md-10" id="firstNameErrorBox">
+        <p class="alert alert-danger text-small mt-2" id="firstNameError">
+          <span class="close icon-small" data-dismiss="alert">&times;</span>
+        </p>
+      </div>
+      <!-- This is used by the frontend javascript-->
+    {{#each errors}}
+      {{#if firstNameError}}
+      <div class="col-md-10">
+        <p class="alert alert-danger text-small mt-2">
+          <span class="close icon-small" data-dismiss="alert">&times;</span>
+          {{firstNameError}}
+        </p>
+      </div>
+      {{/if}}
+
+      {{else}}
+
+      {{/each}}
+    </div>
+
+    <div class="form-group">
+      <label class="control-label col-md-2" for="lastname">Lastname</label>
+      <div class="col-md-10">
+        <input type="text" name="lastName" class="form-control" id="lastname" value="{{lastName}}"/>
+      </div>
+      <!-- This is used by the frontend javascript-->
+      <div class="col-md-10" id="lastNameErrorBox">
+        <p class="alert alert-danger text-small mt-2" id="lastNameError">
+          <span class="close icon-small" data-dismiss="alert">&times;</span>
+        </p>
+      </div>
+      <!-- This is used by the frontend javascript-->
+      {{#each errors}}
+      {{#if lastNameError}}
+      <div class="col-md-10">
+        <p class="alert alert-danger text-small mt-2">
+          <span class="close icon-small" data-dismiss="alert">&times;</span>
+          {{lastNameError}}
+        </p>
+      </div>
+      {{/if}}
+
+      {{else}}
+
+      {{/each}}
+    </div>
+
+    <div class="form-group">
+      <label class="control-label col-md-5" for="email_address">Email Adress</label>
+      <div class="col-md-10">
+        <input type="email" name="emailAddress" class="form-control" id="email_address" value="{{emailAddress}}"/>
+      </div>
+      <!-- This is used by the frontend javascript-->
+      <div class="col-md-10" id="emailErrorBox">
+        <p class="alert alert-danger text-small mt-2" id="emailError">
+          <span class="close icon-small" data-dismiss="alert">&times;</span>
+        </p>
+      </div>
+      <!-- This is used by the frontend javascript-->
+      {{#each errors}}
+      {{#if emailAddressError}}
+      <div class="col-md-10">
+        <p class="alert alert-danger text-small mt-2">
+          <span class="close icon-small" data-dismiss="alert">&times;</span>
+          {{emailAddressError}}
+        </p>
+      </div>
+      {{/if}}
+      {{else}}
+
+      {{/each}}
+    </div>
+
+        <div class="form-group">
+      <label class="control-label col-md-2" for="password">Password</label>
+      <div class="col-md-10">
+        <input type="password" name="password" class="form-control" id="password" value="{{password}}"/>
+      </div>
+      {{#each errors}}
+      {{#if passwordError}}
+      <div class="col-md-10">
+        <p class="alert alert-danger text-small mt-2">
+          <span class="close icon-small" data-dismiss="alert">&times;</span>
+          {{passwordError}}
+        </p>
+      </div>
+      {{/if}}
+
+      {{else}}
+
+      {{/each}}
+    </div>
+
+    <div class="form-group">
+      <label class="control-label col-md-4" for="confirmPassword">Confirm Password</label>
+      <div class="col-md-10">
+        <input type="password" name="confirmPassword" class="form-control" id="confirmPassword" value="{{confirmPassword}}"/>
+      </div>
+
+      <!-- This is used by the front end javascript -->
+      <div class="col-md-10" id="confirmPasswordErrorBox">
+        <p class="alert alert-danger text-small mt-2" id="confirmPasswordError">
+          <span class="close icon-small" data-dismiss="alert">&times;</span>
+          {{confirmPasswordError}}
+        </p>
+      </div>
+      <!-- ends here -->
+
+      {{#each errors}}
+      {{#if confirmPasswordError}}
+      <div class="col-md-10">
+        <p class="alert alert-danger text-small mt-2">
+          <span class="close icon-small" data-dismiss="alert">&times;</span>
+          {{confirmPasswordError}}
+        </p>
+      </div>
+      {{/if}}
+
+      {{else}}
+
+      {{/each}}
+    </div>
+
+    <div class="form-group">
+      <div class="col-md-2">
+        <input type="submit" name="signup" class="btn btn-dark" value="Sign Up"/>
+      </div>
+    </div>
+  </form>
+</div>

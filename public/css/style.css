@@ -1,0 +1,70 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 20px;
+  font-family: Lato, sans-serif;
+  text-rendering: optimizeLegibility;
+}
+
+.nav--bg {
+  background-color: #000000;
+  color: #bf4d35 !important;
+}
+.nav--bg ul li a{
+  font-weight: 600;
+  color: #ad8041 !important;
+}
+
+.signup {
+  margin: 0 auto;
+  width: 45%;
+}
+.text-small {
+  font-size: 60%;
+}
+.icon-small {
+  font-size: 80%;
+}
+
+.hidden {
+  display: none;
+  visibility: hidden;
+}
+.center-menu {
+  margin-left: -45px;
+  min-width: 150px;
+}
+.center {
+  width: 60%;
+  margin: 0 auto;
+}
+aside {
+  margin-top: -10px; 
+  height: 90vh;
+}
+
+/*********************************************************************
+ *** Table style
+ */
+ .table-no-border {
+  width: 100% !important;
+  margin-top: -20px;
+}
+.table-no-border th, .table-no-border td {
+  border: none;
+}
+
+/*********************************************************************
+ *** Passport style
+ */
+.passport {
+  width: 30%;
+  height: 200px;
+  margin: 15px auto;
+  padding-bottom: 0;
+  border-radius: 50%;
+}

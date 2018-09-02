@@ -1,0 +1,27 @@
+{
+  "name": "students-result-management",
+  "version": "1.0.0",
+  "description": "Computes and stores students uploaded result, also allow students to view and print result.",
+  "main": "app.js",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.18.3",
+    "connect-flash": "^0.1.1",
+    "express": "^4.16.3",
+    "express-handlebars": "^3.0.0",
+    "express-session": "^1.15.6",
+    "formidable": "^1.2.1",
+    "hbs": "^4.0.1",
+    "method-override": "^3.0.0",
+    "mongoose": "^5.2.6",
+    "passport": "^0.4.0",
+    "passport-local": "^1.0.0",
+    "xlsx": "^0.13.3"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Iwuji Jude and Okpara Kenneth",
+  "license": "MIT"
+}

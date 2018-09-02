@@ -1,0 +1,53 @@
+<nav class="navbar navbar-expand-sm navbar-dark nav--bg mb-2">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <a class="navbar-brand" href="#">%%LOGO%%</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="narbarNav" aria-expanded="false" aria-lable="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+      </div>
+
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link" href="/">Home </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/about">About</a>
+          </li>
+        </ul>
+        <ul class="navbar-nav ml-auto">
+        {{#if user}}
+          <li class="nav-item"><a href="/{{user.userType}}/logout">Logout</a></li>
+        {{else}}
+        
+          <li class="nav-item dropdown">
+            <a href="#" class="nav-link" data-toggle="dropdown">Sign Up</a>
+            <ul class="dropdown-menu center-menu">
+              <li role="presentation">
+                <a class="dropdown-item"href="/student/signup">Student</a>
+              </li>
+              <li role="presentation">
+                <a class="dropdown-item"href="/lecturer/signup">Lecturer</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-item dropdown">
+            <a href="#" class="nav-link" data-toggle="dropdown">Login</a>
+            <ul class="dropdown-menu center-menu">
+              <li role="presentation">
+                <a class="dropdown-item"href="/admin/login">Admin</a>
+              </li>
+              <li role="presentation">
+                <a class="dropdown-item"href="/student/login">Student</a>
+              </li>
+              <li role="presentation">
+                <a class="dropdown-item"href="/lecturer/login">Lecturer</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+        {{/if}}
+      </div>
+    </div>
+  </nav>

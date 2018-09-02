@@ -1,0 +1,110 @@
+<div class="container row">
+  {{>_admin_sidebar}}
+  <section class="col-md-9">
+    {{>_admin_msg}}
+    <div class="card">
+      <h3 class="card-title text-center">Edit Admin Profile</h3>
+      <div class="card-body">
+        <form action="/admin/upload" method="POST" enctype="multipart/form-data">
+          <div class="text-center">
+            <label class="col-md-12 text-center" for="upload-btn"><img src="{{pictureDir}}" class="card-img-top passport" title="Click to change profile image"/></label>
+            <input type="file" name="picture" class="hidden" id="upload-btn"/>
+            <input type="submit" name="upload" class="btn btn-sm btn-dark " value="Upload"/>
+          </div>
+        </form>
+
+        <form action="/admin/editprofile?_method=PUT" method="POST" class="form-horizontal mt-3">
+          <input type="hidden" name="_method" value="PUT" />
+          <div class="form-group">
+            <label class="control-label col-md-2" for="firstname">Firstname</label>
+            <div class="col-md-10">
+              <input type="text" name="firstName" class="form-control" id="firstname" value="{{user.firstName}}"/>
+            </div>
+      
+            <!-- This is used by the frontend javascript-->
+            <div class="col-md-10" id="firstNameErrorBox">
+              <p class="alert alert-danger text-small mt-2" id="firstNameError">
+                <span class="close icon-small" data-dismiss="alert">&times;</span>
+              </p>
+            </div>
+            <!-- This is used by the frontend javascript-->
+
+            {{#each errors}}
+            {{#if firstNameError}}
+            <div class="col-md-10">
+              <p class="alert alert-danger text-small mt-2">
+                <span class="close icon-small" data-dismiss="alert">&times;</span>
+                {{firstNameError}}
+              </p>
+            </div>
+            {{/if}}
+
+            {{else}}
+
+            {{/each}}
+          </div>
+
+          <div class="form-group">
+            <label class="control-label col-md-2" for="lastname">Lastname</label>
+            <div class="col-md-10">
+              <input type="text" name="lastName" class="form-control" id="lastname" value="{{user.lastName}}"/>
+            </div>
+           <!-- This is used by the frontend javascript-->
+            <div class="col-md-10" id="lastNameErrorBox">
+              <p class="alert alert-danger text-small mt-2" id="lastNameError">
+                <span class="close icon-small" data-dismiss="alert">&times;</span>
+              </p>
+            </div>
+            <!-- This is used by the frontend javascript-->
+            {{#each errors}}
+            {{#if lastNameError}}
+            <div class="col-md-10">
+              <p class="alert alert-danger text-small mt-2">
+                <span class="close icon-small" data-dismiss="alert">&times;</span>
+                {{lastNameError}}
+              </p>
+            </div>
+            {{/if}}
+
+            {{else}}
+
+            {{/each}}
+          </div>
+
+          <div class="form-group">
+            <label class="control-label col-md-5" for="email_address">Email Address</label>
+            <div class="col-md-10">
+              <input type="email" name="emailAddress" class="form-control" id="email_address" value="{{user.emailAddress}}"/>
+            </div>
+
+            <!-- This is used by the frontend javascript-->
+            <div class="col-md-10" id="emailErrorBox">
+              <p class="alert alert-danger text-small mt-2" id="emailError">
+                <span class="close icon-small" data-dismiss="alert">&times;</span>
+              </p>
+            </div>
+            <!-- This is used by the frontend javascript-->
+            {{#each errors}}
+            {{#if emailAddressError}}
+            <div class="col-md-10">
+              <p class="alert alert-danger text-small mt-2">
+                <span class="close icon-small" data-dismiss="alert">&times;</span>
+                {{emailAddressError}}
+              </p>
+            </div>
+            {{/if}}
+
+            {{else}}
+
+            {{/each}}
+          </div>
+          <div class="form-group">
+            <div class="col-md-5">
+              <input type="submit" name="update" value="Update" class="btn btn-dark">
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+</div>

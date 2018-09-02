@@ -1,0 +1,30 @@
+<div class="container row">
+  {{>_admin_sidebar}}
+  <section class="col-md-9">
+    {{>_admin_msg}}
+    <div class="card" id="profile">
+      <h3 class="card-header text-center text-light bg-dark">Profile</h3>
+      <img class="card-img-top passport" src="{{pictureDir}}"/>
+      <div class="card-body">
+        <table class="table table-responsive table-no-border">
+          <tr>
+            <td>Email Address</td>
+            <td>{{user.emailAddress}}</td>
+          </tr>
+          <tr>
+            <td>Firstname</td>
+            <td>{{user.firstName}}</td>
+          </tr>
+          <tr>
+            <td>Lastname</td>
+            <td>{{user.lastName}}</td>
+          </tr>
+        </table>
+      </div>
+      <div class="card-footer text-right">
+        <a class="btn btn-dark" href="/admin/changepassword">Change Password</a>
+        <a class="btn btn-dark" href="/admin/editprofile">Edit Profile</a>
+      </div>
+    </div>
+  </section>
+</div>
