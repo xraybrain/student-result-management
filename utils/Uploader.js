@@ -97,19 +97,21 @@ Upload.prototype.upload = function(req, res, next){
 
           if(this.isResult){
             var year = new Date().getFullYear();
-            newFileName = 'r_' + year + '_' + fields.level + '_' + fields.course_code + '_' + fields.session + fileExt;
-            newResultName = 'r_' + year + '_' + fields.level + '_' + fields.course_code + '_' + fields.session;
+            newFileName = fields.course_code + '_' + fields.level + '_' + year  + '_' + fields.session + fileExt;
+            newResultName = fields.course_code + '_' + fields.level + '_' + year  + '_' + fields.session;
           } else {
             newFileName = 'xb' + (totalDirFiles + 1) + fileExt;
           }
           
           this.relativePath = this.relativePath + newFileName;
+          var newFilePath = path.join(this.dirToUpload, '/', newFileName);
+          var deleteFilePath = path.join(this.dirToUpload,'/',req.user.pictureDir);
+          //var newFilePath = path.join(__dirname, '../public',this.relativePath);
           this.dirToUpload  = path.join(this.dirToUpload,'/',files.file.name);
 
-          var newFilePath = path.join(__dirname, '../public',this.relativePath);
           if(!this.isResult){
             if(req.user.pictureDir){ //the user already has a picture
-              var deleteFilePath = path.join(__dirname,'../','public',req.user.pictureDir);
+              //var deleteFilePath = path.join(__dirname,'../','public',req.user.pictureDir);
               fs.unlink(deleteFilePath, (err) => {
                 if (err) console.log(err);
               });
