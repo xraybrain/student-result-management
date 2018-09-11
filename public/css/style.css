@@ -18,7 +18,12 @@ html {
   font-weight: 600;
   color: #ad8041 !important;
 }
-
+.thumbnail {
+  width: 30px;
+  height: 30px;
+  border: 2px solid rgba(233, 227, 227, 0.37);
+  border-radius: 50%;
+}
 .signup {
   margin: 0 auto;
   width: 45%;
@@ -34,9 +39,22 @@ html {
   display: none;
   visibility: hidden;
 }
+
+.dialog {
+  position: absolute;
+  z-index: 3000;
+  opacity: 0.97;
+}
+
 .center-menu {
-  margin-left: -45px;
-  min-width: 150px;
+  margin-left: -80px;
+  width: 100px;
+  font-size: 70%;
+  min-width: 145px;
+  word-wrap: 40px
+}
+.box {
+  max-height: 400px;
 }
 .center {
   width: 60%;

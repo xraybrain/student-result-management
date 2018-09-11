@@ -1,12 +1,10 @@
-<div class="container row">
-  {{>_admin_sidebar}}
-  <section class="col-md-9">
+<section class="col-md-8 mx-auto">
     {{>_page_msg}}
     {{>_upload_error}}
     <div class="card">
-      <h3 class="card-title text-center">Edit Admin Profile</h3>
+      <h3 class="card-title text-center">Edit Profile</h3>
       <div class="card-body">
-        <form action="/admin/upload" method="POST" enctype="multipart/form-data">
+        <form action="/lecturer/upload" method="POST" enctype="multipart/form-data">
           <div class="text-center">
             <label class="col-md-12 text-center" for="upload-btn"><img src="{{pictureDir}}" class="card-img-top passport" title="Click to change profile image"/></label>
             <input type="file" name="file" class="hidden" id="upload-btn" accept=
@@ -15,7 +13,7 @@
           </div>
         </form>
 
-        <form action="/admin/editprofile?_method=PUT" method="POST" class="form-horizontal mt-3">
+        <form action="/lecturer/editprofile?_method=PUT" method="POST" class="form-horizontal mt-3">
           <input type="hidden" name="_method" value="PUT" />
           <div class="form-group">
             <label class="control-label col-md-2" for="firstname">Firstname</label>
@@ -108,5 +106,4 @@
         </form>
       </div>
     </div>
-  </section>
-</div>
+</section>

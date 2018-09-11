@@ -1,8 +1,5 @@
-<div class="container row">
-  {{>_admin_sidebar}}
-  <section class="col-md-9">
-    {{>_page_msg}}
-    <div class="card" id="profile">
+<section class="col-md-8 mx-auto">
+<div class="card" id="profile">
       <h3 class="card-header text-center text-light bg-dark">Profile</h3>
       <img class="card-img-top passport" src="{{pictureDir}}"/>
       <div class="card-body">
@@ -22,9 +19,8 @@
         </table>
       </div>
       <div class="card-footer text-right">
-        <a class="btn btn-dark" href="/admin/changepassword">Change Password</a>
-        <a class="btn btn-dark" href="/admin/editprofile">Edit Profile</a>
+        <a class="btn btn-dark" href="/lecturer/changepassword">Change Password</a>
+        <a class="btn btn-dark" href="/lecturer/editprofile">Edit Profile</a>
       </div>
     </div>
-  </section>
-</div>
+</section>

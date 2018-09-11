@@ -1,11 +1,9 @@
 const express = require('express');
-const router = express.Router();
-const bcrypt = require('bcryptjs');
+const router  = express.Router();
+const bcrypt  = require('bcryptjs');
 const passport = require('passport');
 const mongoose = require('mongoose');
-const formidable = require('formidable');
 const path = require('path');
-const fs = require('fs');
 
 
 const {ensureAuthenticated, ensureIsAdmin} = require('../utils/auth');
@@ -16,6 +14,8 @@ const validator = require('../utils/validate');
 require('../models/Admin');
 const Admin = mongoose.model('admin');
 
+//-- 
+var Uploader = require('../utils/Uploader');
 
 //-- **********************************************
 //-- Login route
@@ -154,15 +154,15 @@ router.put('/', ensureAuthenticated, ensureIsAdmin, (req, res) => {
   Admin.findOne({_id: userID})
     .then(user => {
       if(!user){
-        req.flash('admin_error_msg', 'Unknown admin');
+        req.flash('page_error_msg', 'Unknown admin');
         res.redirect('/');
       } else if(req.body.password === ''){
-        req.flash('admin_error_msg', 'Password field must not be empty');
+        req.flash('page_error_msg', 'Password field must not be empty');
         res.redirect(`/admin/changepassword`);
       } else {
         // ensure passwords matched
         if(req.body.password !== req.body.confirmPassword){
-          req.flash('admin_error_msg', 'Password Mismatch');
+          req.flash('page_error_msg', 'Password Mismatch');
           res.redirect(`/admin/changepassword`);
         } else {
           // ensure admin old password provided match the password in db
@@ -170,7 +170,7 @@ router.put('/', ensureAuthenticated, ensureIsAdmin, (req, res) => {
             if (err) throw err;
 
             if (!isMatch) {
-              req.flash('admin_error_msg', 'Incorrect old password');
+              req.flash('page_error_msg', 'Incorrect old password');
               res.redirect(`/admin/changepassword/`);
             } else {
               bcrypt.genSalt(10, (err, salt) => {
@@ -180,7 +180,7 @@ router.put('/', ensureAuthenticated, ensureIsAdmin, (req, res) => {
                   user.password = hash;
                   user.save()
                     .then(user => {
-                      req.flash('admin_success_msg', 'Password changed successfully.');
+                      req.flash('page_success_msg', 'Password changed successfully.');
                       res.redirect('/admin/');
                     });
                 });
@@ -203,7 +203,6 @@ router.get('/editprofile', ensureAuthenticated, ensureIsAdmin, (req, res) => {
   }
 
   res.render('admin/edit_profile', {
-    user: req.user,
     pictureDir
   });
 });
@@ -262,75 +261,14 @@ router.put('/editprofile', (req, res) => {
 });
 
 //-- process file upload
-router.post('/upload', (req, res) => {
-  const userID = req.user._id;
-  var pictureUploadDir = path.join(__dirname, '../public/uploads/admins/');
-  const allowedFileTypes = ['.jpg','.jpeg','.png'];
-  var relativePath = '/uploads/admins/';
+router.post('/upload', (req, res, next) => {
+
+  var upload = new Uploader(path.join(__dirname, '../', 'public/uploads/admins'), '/uploads/admins/',{
+    successRedirect: '/admin/',
+    failureRedirect: '/admin/editprofile'
+  }, Admin);
   
-  var targetFilePath = '';
-  var fileExtension = '';
-  var targetFile = '';
-
-  const form = new formidable.IncomingForm();
-  
-  form.parse(req, (err, fields, files) => {
-    targetFilePath = files.picture.path;
-    targetFile = files.picture.name;
-    fileExtension =  path.extname(targetFile);
-
-    if(!targetFile){
-      req.flash('admin_error_msg', 'a file must be selected');
-      res.redirect(`/admin/editprofile/${userID}`);
-    } else {
-      var isAllowed = allowedFileTypes.filter(ext => {
-        if(ext === fileExtension) return fileExtension;
-      });
-
-      if(isAllowed.length > 0){
-        pictureUploadDir += targetFile;
-        relativePath += targetFile;
-
-        // moves the file to the server
-        fs.rename(targetFilePath, pictureUploadDir, (err => {
-          console.log(err);
-        }));
-
-        // retrieve the admin data
-        Admin.findOne({_id: userID})
-          .then(user => {
-            if(user){
-              // remove the user image if any
-              if (user.pictureDir !== ''){
-                var filePath = path.join(__dirname,'../public', user.pictureDir);
-                console.log(filePath);
-                fs.unlink(filePath, (err) => {
-                  console.log(err); // if file not found this error is displayed
-                });
-              }
-              
-              user.pictureDir = relativePath;
-              user.save()
-              .then(user=> {
-                res.redirect(`/admin/`);
-              })
-              .catch(err => {
-                console.log(err);
-              })
-            } else{
-              req.flash('admin_error_msg', 'Sorry, file was not uploaded');
-              res.redirect(`/admin/editprofile/${userID}`);
-            }
-          })
-          .catch(err => {
-            console.log(err);
-          })
-      } else {
-        req.flash('admin_error_msg', 'Sorry, file type is not allowed');
-        res.redirect(`/admin/editprofile/${userID}`);
-      }
-    }
-  })
+  upload.upload(req, res, next);
 });
 
 router.get('/dashboard/', (req, res) => {

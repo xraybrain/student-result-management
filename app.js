@@ -1,14 +1,16 @@
 const express  = require('express');
 const mongoose = require('mongoose');
 const exphbs   = require('express-handlebars');
-const formidable   = require('formidable');
 const bodyParser   = require('body-parser');
 const flash    = require('connect-flash');
 const session  = require('express-session');
 const passport = require('passport');
 const methodOverride = require('method-override');
-const excel  = require('./utils/excel-reader');
 
+const {getFullName} = require('./helpers/usersHelper');
+
+// const {buildResultSchema} = require('./utils/ModelBuilder');
+// const m = buildResultSchema('result');
 
 
 // console.log(validator.isRealPassword('Nonsosky1'));
@@ -60,13 +62,14 @@ app.use(methodOverride('_method'));
 //-- Global variables
 app.use((req, res, next) => {
   res.locals.success_msg = req.flash('success_msg');
-  res.locals.admin_success_msg = req.flash('admin_success_msg');
-  res.locals.admin_error_msg = req.flash('admin_error_msg');
+  res.locals.page_success_msg = req.flash('page_success_msg');
+  res.locals.page_error_msg = req.flash('page_error_msg');
+  res.locals.upload_error = req.flash('upload_error');
   res.locals.error = req.flash('error');
   res.locals.user = req.user || null;
+  res.locals.fullName = getFullName(req.user);
   next();
 });
-
 
 
 // handelbars middleware
@@ -74,6 +77,7 @@ app.engine('handlebars', exphbs({
   defaultLayout: 'main'
 }));
 app.set('view engine', 'handlebars');
+
 
 // body parser middleware
 app.use(bodyParser.urlencoded({extended:false}));
@@ -101,8 +105,10 @@ app.get('/signup/success', (req, res) => {
   res.render('signup/success');
 });
 
+
 // Server Port
 const port = process.env.PORT || 3000;
+
 
 app.listen(port, () => {
   console.log(`Server is listening on port ${port}`);

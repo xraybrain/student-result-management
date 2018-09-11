@@ -1,0 +1,66 @@
+<div class="col-md-8 mx-auto">
+  {{>_upload_error}}
+  <div class="card">
+    <h3 class="card-header bg-dark text-light text-center">Student Result Upload</h3>
+    <div class="card-body">
+      <form class="form-horizontal" id="_form" method="POST" action="/lecturer/uploadresult" enctype="multipart/form-data">
+        <div class="row">
+          <div class="col-md-6">
+            <label class="control-label col-md-5">
+              Result File
+            </label>
+            <div class="col-md-10">
+              <input type="file" name="file" class="form-control"  id="file" required/>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <label class="control-label col-md-5">
+              Course Code
+            </label>
+            <div class="col-md-10">
+              <input type="text" name="course_code" placeholder="Eg: COM101" class="form-control"/>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6">
+            <label class="control-label col-md-5">
+              Session
+            </label>
+            <div class="col-md-10">
+              <select class="form-control" name="session" required>
+                <option value="1">First Semester</option>
+                <option value="2">Second Semester</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <label class="control-label col-md-5">
+              Level
+            </label>
+            <div class="col-md-10">
+              <select class="form-control" name="level" required>
+                <option value="nd1">ND1</option>
+                <option value="nd2">ND2</option>
+                <option value="hnd1">HND1</option>
+                <option value="hnd2">HND2</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="row mt-2">
+          <div class="col-md-6">
+            <div class="col-md-10">
+              <input type="submit" name="preview" value="Preview" class="btn btn-dark control-label" />
+            </div>
+          </div>
+          
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<script src="/js/jquery.form.js"></script>
+<script src="/js/ajax.js"></script>

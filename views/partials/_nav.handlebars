@@ -18,7 +18,22 @@
         </ul>
         <ul class="navbar-nav ml-auto">
         {{#if user}}
-          <li class="nav-item"><a href="/{{user.userType}}/logout">Logout</a></li>
+          {{#if Lecturer}}
+          <li class="nav-item">
+            <a class="nav-link btn btn-sm btn-light" href="/lecturer/uploadresult" title="result">Upload</a>
+          </li>
+          {{/if}}
+          <li class="nav-item dropdown">
+            {{#if user.pictureDir}}
+            <img src="{{user.pictureDir}}" class="thumbnail" data-toggle="dropdown"/>
+            {{else}}
+            <img src="/img/user.png" class="thumbnail" data-toggle="dropdown"/>
+            {{/if}}
+            <ul class="dropdown-menu center-menu text-center">
+              <li class="presentation"><a href="/{{user.userType}}/" class="dropdown-item">{{fullName}}</a></li>
+              <li class="presentation"><a href="/{{user.userType}}/logout" class="dropdown-item">Logout</a></li>
+            </ul>
+          </li>
         {{else}}
         
           <li class="nav-item dropdown">

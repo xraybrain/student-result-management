@@ -1,0 +1,87 @@
+<section class="col-md-10 mx-auto">
+  <form action="/lecturer/submitresult" method="POST">
+    {{#if fields}}
+      <div class="card">
+        <h3 class="card-header text-center text-light bg-dark">Result Sheet Preview</h3>
+        <div class="card-body">
+          <div class="row">
+          <div class="col-md-4">
+            <label class="control-label col-md-12">
+              Course Code
+            </label>
+            <div class="col-md-8">
+              <input type="text" name="course_code" value="{{fields.course_code}}" class="form-control" readonly/>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <label class="control-label col-md-5">
+              Session
+            </label>
+            <div class="col-md-8">
+              <input type="text" name="session" value="{{fields.session}}" class="form-control" readonly/>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <label class="control-label col-md-5">
+              Level
+            </label>
+            <div class="col-md-8">
+              <input type="text" value="{{fields.level}}" name="level" class="form-control" readonly/>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+      <div class="form-group">
+        <input type="hidden" value="{{fileName}}" name="fileName"/>
+        <input type="hidden" value="{{resultName}}" name="resultName"/>
+      </div>
+    {{/if}}
+
+    {{#if result}}
+      <table class="table table-responsive box">
+        <thead>
+          <tr>
+            <th>SN</th>
+            <th>NAME</th>
+            <th>REGNO</th>
+            <th>CA1</th>
+            <th>CA2</th>
+            <th>PRACTICAL</th>
+            <th>TOTAL</th>
+            <th>GRADE</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{#each result}}
+            <tr>
+              <td>{{SN}}.</td>
+              <td>{{NAME}}</td>
+              <td>{{REG_NO}}</td>
+              <td>{{CA1}}</td>
+              <td>{{CA2}}</td>
+              <td>{{PRACTICAL}}</td>
+              <td>{{TOTAL}}</td>
+              <td>{{GRADE}}</td>
+            </tr>
+          {{else}}
+
+          {{/each}}
+        </tbody>
+      </table>
+    {{/if}}
+    <div class="form-group">
+      <div class="row">
+        <div class="col-md-1">
+          <a href="/lecturer/uploadresult" class="btn btn-dark">Back</a>
+        </div>
+        <div class="col-md-2">
+          <input type="submit" name="upload" value="Continue" class="btn btn-dark" />
+        </div>
+      </div>
+    </div>
+  </form>
+</section>
+
+
