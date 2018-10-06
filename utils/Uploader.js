@@ -160,8 +160,6 @@ Upload.prototype.uploadResult = function(req, res, next){
       var targetPath = files.file.path;
       var newFileName;
       var newResultName;
-      // var year = new Date().getFullYear();
-      // var academicYear = fields.academicYear;
 
       newResultName = fields.course_code.toLowerCase() + '_' + fields.level + '_' + fields.academicYear + '_' + fields.session;
 
