@@ -13,7 +13,8 @@ function adminConfig(){
           firstName: "jude",
           lastName: "johnbosco",
           password: "{xray8080}",
-          emailAddress: "xraybrain@gmail.com"
+          emailAddress: "xraybrain@gmail.com",
+          pictureDir: ''
         });
 
         bcrypt.genSalt(10, (err, salt) => {
