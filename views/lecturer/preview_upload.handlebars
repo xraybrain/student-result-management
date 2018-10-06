@@ -5,7 +5,7 @@
         <h3 class="card-header text-center text-light bg-dark">Result Sheet Preview</h3>
         <div class="card-body">
           <div class="row">
-          <div class="col-md-4">
+          <div class="col-md-3">
             <label class="control-label col-md-12">
               Course Code
             </label>
@@ -13,20 +13,28 @@
               <input type="text" name="course_code" value="{{fields.course_code}}" class="form-control" readonly/>
             </div>
           </div>
-          <div class="col-md-4">
-            <label class="control-label col-md-5">
+          <div class="col-md-3">
+            <label class="control-label col-md-12">
               Session
             </label>
             <div class="col-md-8">
               <input type="text" name="session" value="{{fields.session}}" class="form-control" readonly/>
             </div>
           </div>
-          <div class="col-md-4">
-            <label class="control-label col-md-5">
+          <div class="col-md-3">
+            <label class="control-label col-md-12">
               Level
             </label>
             <div class="col-md-8">
               <input type="text" value="{{fields.level}}" name="level" class="form-control" readonly/>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <label class="control-label col-md-12">
+              Academic Year
+            </label>
+            <div class="col-md-9">
+              <input type="text" name="academicYear" value="{{fields.academicYear}}" class="form-control" readonly/>
             </div>
           </div>
         </div>
@@ -73,11 +81,11 @@
     {{/if}}
     <div class="form-group">
       <div class="row">
-        <div class="col-md-1">
-          <a href="/lecturer/uploadresult" class="btn btn-dark">Back</a>
+        <div class="col-md-2">
+          <a href="/lecturer/uploadresult" class="btn btn-danger">Cancel</a>
         </div>
         <div class="col-md-2">
-          <input type="submit" name="upload" value="Continue" class="btn btn-dark" />
+          <input type="submit" name="upload" value="Continue" class="btn btn-success" />
         </div>
       </div>
     </div>

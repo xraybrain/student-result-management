@@ -1,0 +1,46 @@
+<div class="container row">
+  {{>_admin_sidebar}}
+  <section class="col-md-9">
+    {{>_page_msg}}
+    {{#if resultSheets}}
+      <div class="card box">
+        <h3 class="card-header">Submitted Result Sheets</h3>
+        <form  action="/admin/computeresult/" method="POST">
+        <table class="table table-striped  mx-auto col-md-9">
+          <thead>
+            <th>Course Code</th>
+            <th>Course Credit Unit</th>
+          </thead>
+          <tbody>
+          {{#each resultSheets}}
+          <tr>
+            <td>{{courseCode}}</td>
+            <td>
+              <input type="text" name="creditUnit" class="form-control col-md-3 text-center" maxlength="1" required/>
+            </td>
+          </tr>
+          {{else}}
+
+          {{/each}}
+          <tr>
+            <th class="text-small">Total Submitted Results</th>
+            <td class="badge badge-dark">{{totalSheets}}</td>
+          </tr>
+          </tbody>
+        </table>
+          <input type="hidden" name="academicYear" value="{{academicYear}}" />
+          <input type="hidden" name="level" value="{{level}}" />
+          <input type="hidden" name="session" value="{{session}}" />
+          <div class="row">
+            <div class="col-md-2 ml-2">
+              <input type="submit" name="submit" value="Compute" class="btn btn-dark"/>
+            </div>
+            <div class="col-md-2">
+              <a href="/admin/dashboard/" class="btn btn-dark">Decline</a>
+            </div>
+          </div>
+        </form>
+      </div>
+    {{/if}}
+  </section>
+</div>

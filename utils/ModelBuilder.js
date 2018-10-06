@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 const Schema   = mongoose.Schema;
+const fs   = require('fs');
+const path = require('path');
 
 function buildResultSchema(modelName) {
   
@@ -44,18 +46,54 @@ function buildResultSchema(modelName) {
       required: true
     }
   }
-
-  const newSchema = new Schema(resultSchema);
-
-  mongoose.model(modelName, newSchema);
-
-  return mongoose.model(modelName);
-}
-
-function getResultModel(modelName) {
+  var model = undefined;
+  try {
+    model = mongoose.model(modelName);
+  } catch (error) {
+    
+  }
+  if(model){
+    return mongoose.model(modelName);
+  } else {
+    const newSchema = new Schema(resultSchema);
+    mongoose.model(modelName, newSchema);
+    return mongoose.model(modelName);
+  }
   
 }
 
+function buildSchemaDoc(doc = []){
+  var schemaDoc = new Object();
+
+  for(var i = 0; i < doc.length; i++){
+    schemaDoc[doc[i]] =  {"type": "String", default: "N/A"};
+  }
+  
+  return JSON.stringify(schemaDoc);
+}
+
+function buildModel(schemaDoc={}, modelName){
+  if (!(schemaDoc instanceof Object)){
+    schemaDoc = JSON.parse(schemaDoc);
+  }
+  
+  const newSchema = new Schema(schemaDoc);
+  var model ;
+  try {
+    model = mongoose.model(modelName);
+  } catch (error) {
+    // do nothing
+  }
+  if(model){
+    return mongoose.model(modelName)
+  } else{
+    mongoose.model(modelName, newSchema);
+    return mongoose.model(modelName);
+  }
+}
+
 module.exports = {
-  buildResultSchema
+  buildResultSchema,
+  buildSchemaDoc,
+  buildModel
 };

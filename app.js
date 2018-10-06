@@ -9,25 +9,19 @@ const methodOverride = require('method-override');
 
 const {getFullName} = require('./helpers/usersHelper');
 
-// const {buildResultSchema} = require('./utils/ModelBuilder');
-// const m = buildResultSchema('result');
+//-- db config
+const {mongoURI} = require('./config/database'); 
 
-
-// console.log(validator.isRealPassword('Nonsosky1'));
-
-// var book = excel.read('./public/excel/result.xlsx');
-// var workBook = excel.to_json(book).Sheet1;
-
-// for(var i = 0; i < workBook.length; i++){
-//   console.log(workBook[i].Surname, workBook[i].firstname);
-// }
-
+const {adminConfig} = require('./config/app-config');
 
 //**Connect to Mongoose 
-mongoose.connect('mongodb://127.0.0.1:27017/resultManagement', {
+mongoose.connect(mongoURI, {
   useNewUrlParser: true
 })
-  .then(()=> console.log('MongoDB Connected...'))
+  .then(()=> {
+    console.log('MongoDB Connected...');
+    adminConfig();
+  })
   .catch((err)=>console.log(err));
 //--Mongoose connection ends here
 
@@ -96,8 +90,15 @@ app.use('/admin', admins);
 
 // Index route
 app.get('/', (req, res) => {
+  let student;
+  if(req.user){
+    student = req.user.userType === "student" ? true : false;
+  }
+  
+
   res.render('index', {
-    pageTitle: 'Student Result Management'
+    pageTitle: 'Student Result Management',
+    student
   });
 });
 
@@ -105,10 +106,8 @@ app.get('/signup/success', (req, res) => {
   res.render('signup/success');
 });
 
-
 // Server Port
 const port = process.env.PORT || 3000;
-
 
 app.listen(port, () => {
   console.log(`Server is listening on port ${port}`);

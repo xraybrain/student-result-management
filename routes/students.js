@@ -5,17 +5,27 @@ const bcrypt   = require('bcryptjs');
 const passport = require('passport');
 const validator  = require('../utils/validate');
 
+//-- the ModelBuilder
+const {buildResultSchema, buildSchemaDoc, buildModel} = require('../utils/ModelBuilder');
+
+const {ensureAuthenticated} = require('../utils/auth');
+
+//-- Load the compositesheetlog model
+require('../models/CompositeSheetLog');
+const CompositeSheetLog = mongoose.model('compositesheetlog');
+
 // require student model
 require('../models/Student');
 const Student = mongoose.model('students');
 
-// Signup Student route
+
+
+//-- Signup Student route
 router.get('/signup', (req, res) => {
   res.render('student/signup');
 });
 
-
-// process student signup form
+//-- process student signup form
 router.post('/signup', (req, res)=>{
   let errors = []; 
   
@@ -132,6 +142,48 @@ router.post('/login', (req, res, next) => {
     failureRedirect: '/student/login',
     failureFlash: true
   })(req, res, next);
+});
+
+//-- Result Checker
+router.post('/resultchecker', ensureAuthenticated, (req, res) => {
+  let academicYear = `${req.body.year1}_${req.body.year2}`
+  let collectionName = `${req.body.level}_${academicYear}_${req.body.session}`;
+  let regNo = req.body.regNo;
+
+  CompositeSheetLog.findOne({compositeSheetTableName: collectionName})
+    .then(log => {
+      if(log){
+        const CompositeSheetModel = buildModel(log.schemaDoc, log.compositeSheetTableName);
+
+        CompositeSheetModel.findOne({regNo: regNo})
+          .then(result => {
+            if(result){
+              
+              let resultData = [];
+              let columnHeading = Object.getOwnPropertyNames(result._doc);
+              for(const heading of columnHeading){
+                switch(heading){
+                  case '__v':
+                  break;
+                  case '_id':
+                  break;
+                  case 'regNo':
+                  break;
+                  default:
+                   resultData.push({"courseCode": heading, "grade": result[heading]});
+                }
+              }
+              res.render('student/checkedresult', {
+                resultData
+              });
+              
+            }
+          })
+      }else{
+        req.flash('page_error_msg', 'Result not available');
+        res.redirect('/');
+      }
+    })
 });
 
 //-- Logout Route

@@ -54,7 +54,9 @@ html {
   word-wrap: 40px
 }
 .box {
-  max-height: 400px;
+  max-height: 450px;
+  overflow: hidden;
+  overflow-y: scroll;
 }
 .center {
   width: 60%;

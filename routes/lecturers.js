@@ -10,13 +10,17 @@ const validator = require('../utils/validate');
 
 const {ensureAuthenticated, ensureIsAdmin} = require('../utils/auth');
 
-const {buildResultSchema} = require('../utils/ModelBuilder');
+const {buildResultSchema, buildSchemaDoc} = require('../utils/ModelBuilder');
 
 const excel      = require('../utils/excel-reader');
 
 // require lecturer model
 require('../models/Lecturer');
 const Lecturer = mongoose.model('lecturers');
+
+// require resultslog model
+require('../models/ResultsLog');
+const  ResultsLog = mongoose.model('resultslog');
 
 //-- 
 var Uploader = require('../utils/Uploader');
@@ -176,8 +180,8 @@ router.post('/uploadresult', (req, res, next) => {
     successRedirect: '/lecturer/',
     failureRedirect: '/lecturer/uploadresult',
     isResult:true
-  }, Lecturer);
-  upload.upload(req, res, next);
+  }, ResultsLog);
+  upload.uploadResult(req, res, next);
 });
 //-- Process uploaded result
 router.post('/submitresult', (req, res) => {
@@ -190,11 +194,38 @@ router.post('/submitresult', (req, res) => {
   for(var i = 0; i < resultData.length; i++) {
     new ResultSchema(resultData[i])
      .save()
-     .then(result => {});
+     .then(result => {})
+     .catch(err => {
+      //  req.flash('upload_error', 'some fields might be empty and it is not allowed. result upload failed');
+      //  res.redirect('/lecturer/uploadresult');
+     })
   }
-
-  res.redirect('/');
+  
+  const newResultLog = new ResultsLog({
+    resultTableName: req.body.resultName,
+    courseCode: req.body.course_code,
+    academicYear: req.body.academicYear,
+    level: req.body.level,
+    session: req.body.session
+  });
+  newResultLog.save()
+   .then(resultsLog => {
+    if(resultsLog) {
+      req.flash('success_msg', 'Result sheet submitted');
+      res.redirect('/lecturer/');
+    } else {
+      req.flash('Error occured while reading file into database')
+      res.redirect('/lecturer/uploadresult')
+    }
+   })
+  
 });
+
+//-- Compute result route
+router.get('/computeresult/', (req, res) => {
+  
+});
+
 // Signup Lecturers route
 router.get('/signup', (req, res) => {
   res.render('lecturer/signup');

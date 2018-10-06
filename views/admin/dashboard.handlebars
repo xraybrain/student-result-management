@@ -2,6 +2,8 @@
   {{>_admin_sidebar}}
   <section class="col-md-9">
     {{>_page_msg}}
-
+    {{#if dashboardHandler}}
+      {{>_admin_dashboard}}
+    {{/if}}
   </section>
 </div>

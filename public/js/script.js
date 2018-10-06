@@ -58,6 +58,8 @@ var UI = (function(){
   var confirmPasswordErrorBoxObj = document.querySelector("#confirmPasswordErrorBox");
   var confirmPasswordError = document.querySelector('#confirmPasswordError');
   if(confirmPasswordErrorBoxObj !== null) confirmPasswordErrorBoxObj.hidden = true;
+  
+  var academicYearObj = document.querySelector("#academicYear");
 
   return {
     student: student,
@@ -76,7 +78,8 @@ var UI = (function(){
     passwordObj: passwordObj,
     confirmPasswordObj: confirmPasswordObj,
     confirmPasswordErrorBoxObj: confirmPasswordErrorBoxObj,
-    confirmPasswordError: confirmPasswordError
+    confirmPasswordError: confirmPasswordError,
+    academicYearObj: academicYearObj
   };
 })();
 
@@ -86,6 +89,20 @@ var UI = (function(){
 var app = (function(validator, ui){
   var isSubmitOk = true; // this is used to ensure their is no error
 
+  function getAcademicYear(glue) {
+    var year  = new Date().getFullYear();
+    var month = new Date().getMonth() + 1;
+    var academicYear = '';
+
+    if(month >= 10 || month <= 7){
+      academicYear = year + glue + (year+1);
+    } else {
+      academicYear = year-1 + glue + (year);
+    }
+    if(ui.academicYearObj)
+      ui.academicYearObj.innerHTML = '<option value="' +  academicYear + '">' + academicYear + '</option>';
+    //return academicYear;
+  }
   function addValidateEvent (element, error, errorContainer,validate,event, message){
     element.addEventListener(event, function(e){
       if (!validate(element.value)){
@@ -136,6 +153,8 @@ var app = (function(validator, ui){
     addPasswordMatchEvent(ui.confirmPasswordObj,ui.passwordObj, ui.confirmPasswordError, ui.confirmPasswordErrorBoxObj, match, 'keyup', "Password mismatch");
   }
   return {
-    isSubmitOk: isSubmitOk
+    isSubmitOk: isSubmitOk,
+    getAcademicYear: getAcademicYear
   };
 })(Validator, UI);
+app.getAcademicYear('_');

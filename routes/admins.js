@@ -1,3 +1,4 @@
+'use strict';
 const express = require('express');
 const router  = express.Router();
 const bcrypt  = require('bcryptjs');
@@ -8,7 +9,25 @@ const path = require('path');
 
 const {ensureAuthenticated, ensureIsAdmin} = require('../utils/auth');
 
+const {buildResultSchema, buildSchemaDoc, buildModel} = require('../utils/ModelBuilder');
+
+// require resultslog model
+require('../models/ResultsLog');
+const  ResultsLog = mongoose.model('resultslog');
+
+//-- Load the compositesheetlog model
+require('../models/CompositeSheetLog');
+const CompositeSheetLog = mongoose.model('compositesheetlog');
+
+//-- Load the Student model
+require('../models/Student');
+const Student = mongoose.model('students');
+
 const validator = require('../utils/validate');
+
+//--
+const Compute = require('../utils/Compute');
+
 
 //-- Load admin schema
 require('../models/Admin');
@@ -208,7 +227,7 @@ router.get('/editprofile', ensureAuthenticated, ensureIsAdmin, (req, res) => {
 });
 
 //-- Process Edit profile form
-router.put('/editprofile', (req, res) => {
+router.put('/editprofile',ensureAuthenticated, ensureIsAdmin, (req, res) => {
   const userID = req.user.id;
   let errors = [];
   var pictureDir = req.user.pictureDir;
@@ -261,7 +280,7 @@ router.put('/editprofile', (req, res) => {
 });
 
 //-- process file upload
-router.post('/upload', (req, res, next) => {
+router.post('/upload', ensureAuthenticated, ensureIsAdmin,(req, res, next) => {
 
   var upload = new Uploader(path.join(__dirname, '../', 'public/uploads/admins'), '/uploads/admins/',{
     successRedirect: '/admin/',
@@ -271,7 +290,147 @@ router.post('/upload', (req, res, next) => {
   upload.upload(req, res, next);
 });
 
-router.get('/dashboard/', (req, res) => {
-  res.render('admin/dashboard');
+//-- dashboard route
+router.get('/dashboard/', ensureAuthenticated, ensureIsAdmin,(req, res) => {
+  res.render('admin/dashboard', {
+    dashboardHandler: true
+  });
 });
+
+//-- compute result details route
+router.get('/computeresultdetails/', ensureAuthenticated, ensureIsAdmin,(req, res) => {
+  res.render('admin/compute_result_details');
+});
+
+router.post('/resultdetails/', ensureAuthenticated, ensureIsAdmin,(req, res) => {
+  var academicYear = req.body.year1 + '_' + req.body.year2;
+  ResultsLog.find({academicYear: academicYear,
+  level: req.body.level,
+  session: req.body.session})
+  .sort({courseCode: 'asc'})
+  .then(resultslogs => {
+    if(resultslogs.length > 0){
+      res.render('admin/result_sheets',{
+        resultSheets: resultslogs,
+        totalSheets: resultslogs.length,
+        academicYear: academicYear,
+        level: req.body.level,
+        session: req.body.session
+      });
+    } else {
+      req.flash('page_error_msg', 'no result sheets found');
+      res.redirect('/admin/computeresultdetails/')
+    }
+  })
+  .catch(err => {
+    req.flash('page_success_msg', 'no result sheets found');
+    res.redirect('/admin/computeresultdetails/')
+  });
+});
+
+//-- Compute result route
+router.post('/computeresult/', (req, res) => {
+  let creditUnits = req.body.creditUnit;
+ ResultsLog.find({
+   academicYear: req.body.academicYear,
+   level: req.body.level,
+   session: req.body.session})
+  .sort({courseCode: 'asc'})
+  .then(resultslogs => {
+    if(resultslogs.length > 0){
+      var compositeSheetColumns = [];
+      let courseCreditUnits = [];
+      
+      compositeSheetColumns.push('regNo');
+      compositeSheetColumns.push('GPA');
+
+
+      var resultCollectionNames = [];
+      for(var i = 0; i < resultslogs.length; i++){
+        compositeSheetColumns.push(resultslogs[i].courseCode);
+        resultCollectionNames.push({tableName: resultslogs[i].resultTableName, courseCode: resultslogs[i].courseCode});
+        courseCreditUnits.push({courseCode: resultslogs[i].courseCode, creditUnit: Number(creditUnits[i])});
+      }
+
+    
+
+      Student.find({level: req.body.level}).sort("desc")
+        .then(students => {
+          if(students){
+            let academicYear = req.body.academicYear;
+            let level   = req.body.level;
+            let session = req.body.session;
+
+            let collectionName = level + '_' + academicYear + '_' + session;
+
+            let compositeSheetSchema = buildSchemaDoc(compositeSheetColumns);
+            let CompositeSheetModel  = buildModel(compositeSheetSchema, collectionName);
+            let regNo = [];
+            let compute = new Compute(CompositeSheetModel, courseCreditUnits);
+
+            regNo = compute.loadRegNo(students)
+
+            
+            var resultSheetModel;
+            
+            for(let i = 0; i < regNo.length; i++){
+              for(let j = 0; j < resultCollectionNames.length;j++){
+                resultSheetModel = buildResultSchema(resultCollectionNames[j].tableName);
+                let currentCourseCode = resultCollectionNames[j].courseCode;
+                
+                //--------------------------------Review
+                resultSheetModel.findOne({REG_NO: regNo[i]})
+                  .then(resultData => {
+                    if(resultData){
+                      //-- This can be reviewed <---
+                      //-- Update this student record
+                      compute.updateStudent(resultData.REG_NO, resultData.GRADE, currentCourseCode);
+                    } else {
+                      console.log("Result Sheet: result not found")
+                    } 
+                  })
+                  .catch(err => {
+                    if(err) console.log("Error: ",err);
+                  });
+              }
+              
+              compute.computeGPA(regNo[i]);
+
+            }
+            CompositeSheetLog.findOne({compositeSheetTableName: collectionName})
+              .then(log => {
+                if(!log){
+                  new CompositeSheetLog({
+                    compositeSheetTableName: collectionName,
+                    schemaDoc: compositeSheetSchema,
+                    academicYear,
+                    level,
+                    session
+                  })
+                  .save()
+                  .then(log => {
+                    req.flash('page_success_msg', 'Result Computed Successfully');
+                    res.redirect('/admin/dashboard');
+                  });
+                } else{
+                  req.flash('page_success_msg', 'Result Computed Successfully');
+                  res.redirect('/admin/dashboard');
+                }
+              })
+              .catch(err => {
+                console.log(err);
+              });
+            
+          }else {
+            req.flash('page_error_msg', 'No Student Found');
+            res.redirect('/admin/dashboard');
+          }
+        })
+    } else {
+      req.flash('page_error_msg', 'No Result Sheet Found');
+      res.redirect('/admin/dashboard');
+    }
+  });
+});
+
 module.exports = router;

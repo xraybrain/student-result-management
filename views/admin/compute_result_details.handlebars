@@ -1,0 +1,54 @@
+<div class="container row">
+  {{>_admin_sidebar}}
+  <section class="col-md-9">
+    {{>_page_msg}}
+    <div class="card mt-5 mx-auto">
+      <h3 class="card-header text-center text-light bg-dark">Result Sheet Details</h3>
+      <form class="form-horizontal" action="/admin/resultdetails" method="POST">
+        <div class="row">
+          <div class="col-md-6">
+            <label class="control-label col-md-5">Level</label>
+            <div class="col-md-8">
+              <select name="level" class="form-control" required>
+                <option value="nd1">ND1</option>
+                <option value="nd2">ND2</option>
+                <option value="hnd1">HND1</option>
+                <option value="hnd2">HND2</option>
+              </select>
+            </div>
+          </div>
+          
+          <div class="col-md-6">
+            <label class="control-label col-md-5">Session</label>
+            <div class="col-md-8">
+              <select name="session" class="form-control" required>
+                <option value="1">First Semester</option>
+                <option value="2">Second Semester</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6">
+            <label class="control-label col-md-9">Academic Year</label>
+            <div class="row ml-1">
+              <div class="col-md-3">
+                <input type="text" name="year1" class="form-control" required title="Academic Year"/>
+              </div>
+              
+              <div class="col-md-3">
+                <input type="text" name="year2" class="form-control" required title="Academic Year"/>
+              </div>
+            </div>
+          </div>
+          
+          <div class="col-md-6">
+            <div class="col-md-8 mt-4">
+              <input type="submit" name="submit" value="Details" class="btn btn-dark" />
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </section>
+</div>

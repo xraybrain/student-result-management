@@ -95,56 +95,27 @@ Upload.prototype.upload = function(req, res, next){
           var newFileName;
           var newResultName;
 
-          if(this.isResult){
-            var year = new Date().getFullYear();
-            newFileName = fields.course_code + '_' + fields.level + '_' + year  + '_' + fields.session + fileExt;
-            newResultName = fields.course_code + '_' + fields.level + '_' + year  + '_' + fields.session;
-          } else {
-            newFileName = 'xb' + (totalDirFiles + 1) + fileExt;
-          }
+          newFileName = 'xb' + (totalDirFiles + 1) + fileExt;
           
           this.relativePath = this.relativePath + newFileName;
           var newFilePath = path.join(this.dirToUpload, '/', newFileName);
-          var deleteFilePath = path.join(this.dirToUpload,'/',req.user.pictureDir);
-          //var newFilePath = path.join(__dirname, '../public',this.relativePath);
           this.dirToUpload  = path.join(this.dirToUpload,'/',files.file.name);
 
-          if(!this.isResult){
-            if(req.user.pictureDir){ //the user already has a picture
-              //var deleteFilePath = path.join(__dirname,'../','public',req.user.pictureDir);
-              fs.unlink(deleteFilePath, (err) => {
-                if (err) console.log(err);
-              });
-            }
+          if(req.user.pictureDir){ 
+            //-- the user already has a picture delete it
+            var deleteFilePath = path.join(__dirname,'../','public',req.user.pictureDir);
+            fs.unlink(deleteFilePath, (err) => {
+              if (err) console.log(err);
+            });
           }
+          
 
           fs.rename(targetPath, this.dirToUpload, (err) => {
             if (err) throw err;
 
             fs.rename(this.dirToUpload, newFilePath, (err) => {
               if (err) throw err;
-              var result = {}
-              if(this.isResult){
-
-                var resultSheet = excel.read(newFilePath);
-                result = excel.to_json(resultSheet).Sheet1;
-                
-                var resultSheetHeading = Object.getOwnPropertyNames(result[0]);
-                resultSheetHeading.shift();
-                if(this.isResultHeadingOk(resultSheetHeading)){
-                  fields.course_code = fields.course_code.toLowerCase();
-                  res.render('lecturer/preview_upload', {
-                    fields,
-                    result,
-                    fileName : newFilePath,
-                    resultName :newResultName
-                  });
-                }else{
-                  req.flash('upload_error', `The result sheet column headings must follow the described format which is [SN | NAME | REG_NO | CA1 | CA2 | PRACTICAL | EXAM | TOTAL | GRADE]`);
-                  res.redirect('/lecturer/uploadresult');
-                }
-
-              } else {
+              
                 this.User.findOne({_id: userID})
                .then(user => {
                  if(user){
@@ -156,10 +127,95 @@ Upload.prototype.upload = function(req, res, next){
                      });
                  }
                })
-              }
             });
 
           });
+        });
+    } else{
+      req.flash('upload_error', error);
+      res.redirect(this.failureRedirect);
+    }
+  });
+}
+
+
+//-- uploads a result file
+Upload.prototype.uploadResult = function(req, res, next){
+  
+  var form = new formidable.IncomingForm();
+  // var userID = req.user.id;
+  
+  form.parse(req, (errors, fields, files) => {
+    var uploadOk = false;
+    var error = null;
+
+    uploadOk = this.validateSize(files.file.size);
+    if(!uploadOk) error = 'Large result sheet filesize. file must be between 100kb - 1mb';
+  
+    uploadOk = this.isAllowedFile(files.file.name);
+    if(!uploadOk) error = 'File Type is not allowed';
+
+    if(!error){
+      var fileExt = path.extname(files.file.name);
+      var targetPath = files.file.path;
+      var newFileName;
+      var newResultName;
+      // var year = new Date().getFullYear();
+      // var academicYear = fields.academicYear;
+
+      newResultName = fields.course_code.toLowerCase() + '_' + fields.level + '_' + fields.academicYear + '_' + fields.session;
+
+      //-- ensure results are uploaded once
+      this.User.findOne({resultTableName: newResultName})
+        .then(resultTableDetails => {
+           if(resultTableDetails){
+            req.flash('upload_error', 'Result already uploaded');
+            res.redirect(this.failureRedirect);
+           } else {
+            newFileName =  newResultName + fileExt;
+      
+            // this.relativePath = this.relativePath + newFileName;
+            var newFilePath = path.join(this.dirToUpload, '/', newFileName);
+            
+            //-- appends the filetoupload to dirToUpload
+            this.dirToUpload  = path.join(this.dirToUpload,'/',files.file.name);
+      
+            //-- this uploads the result sheet
+            fs.rename(targetPath, this.dirToUpload, (err) => {
+              if (err) throw err;
+      
+              fs.rename(this.dirToUpload, newFilePath, (err) => {
+                if (err) throw err;
+                var result = {}
+                
+      
+                var resultSheet = excel.read(newFilePath);
+                result = excel.to_json(resultSheet).Sheet1;
+                
+                var resultSheetHeading = Object.getOwnPropertyNames(result[0]);
+                //-- removes the first element of the array resultSheetHeading
+                resultSheetHeading.shift();
+                if(this.isResultHeadingOk(resultSheetHeading)){
+                  fields.course_code = fields.course_code.toLowerCase();
+                  res.render('lecturer/preview_upload', {
+                    fields,
+                    result,
+                    fileName : newFilePath,
+                    resultName :newResultName
+                  });
+                }else{
+                  //-- delete the uploaded file
+                  fs.unlink(newFilePath, (err) => {
+                    if (err) console.log(err);
+                  });
+      
+                  req.flash('upload_error', `The result sheet column headings must follow the described format which is [SN | NAME | REG_NO | CA1 | CA2 | PRACTICAL | EXAM | TOTAL | GRADE]`);
+                  res.redirect('/lecturer/uploadresult');
+                }
+              });
+      
+            });
+           }
         });
     } else{
       req.flash('upload_error', error);
