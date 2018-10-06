@@ -176,7 +176,7 @@ router.get('/uploadresult', ensureAuthenticated, (req, res) => {
 
 //-- Preview Result Upload
 router.post('/uploadresult', (req, res, next) => {
-  var upload = new Uploader(path.join(__dirname, '../', 'private/results'), null,{
+  var upload = new Uploader(path.join(__dirname,'..//public/private/results'), null,{
     successRedirect: '/lecturer/',
     failureRedirect: '/lecturer/uploadresult',
     isResult:true

@@ -63,7 +63,6 @@ Upload.prototype.isResultHeadingOk = function(resultSheetHeading){
   for(var i = 0; i < RESULT_SHEET_HEADING.length; i++){
     if(RESULT_SHEET_HEADING[i] !== resultSheetHeading[i]){
       return false
-      break;
     }
   }
 
@@ -80,7 +79,7 @@ Upload.prototype.upload = function(req, res, next){
     var uploadOk = false;
     var error = null;
     uploadOk = this.validateSize(files.file.size);
-    if(!uploadOk) error = 'Large image filesize. file must be between 100kb - 1mb';
+    if(!uploadOk) error = 'Not required filesize. file must be between 100kb - 1mb';
     
   
     uploadOk = this.isAllowedFile(files.file.name);
@@ -150,7 +149,7 @@ Upload.prototype.uploadResult = function(req, res, next){
     var error = null;
 
     uploadOk = this.validateSize(files.file.size);
-    if(!uploadOk) error = 'Large result sheet filesize. file must be between 100kb - 1mb';
+    if(!uploadOk) error = 'Not required result sheet filesize. file must be between 100kb - 1mb';
   
     uploadOk = this.isAllowedFile(files.file.name);
     if(!uploadOk) error = 'File Type is not allowed';
@@ -172,7 +171,6 @@ Upload.prototype.uploadResult = function(req, res, next){
            } else {
             newFileName =  newResultName + fileExt;
       
-            // this.relativePath = this.relativePath + newFileName;
             var newFilePath = path.join(this.dirToUpload, '/', newFileName);
             
             //-- appends the filetoupload to dirToUpload
