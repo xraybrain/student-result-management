@@ -182,10 +182,10 @@ Upload.prototype.uploadResult = function(req, res, next){
       
             //-- this uploads the result sheet
             fs.rename(targetPath, this.dirToUpload, (err) => {
-              if (err) throw err;
+              if (err) console.log(err);
       
               fs.rename(this.dirToUpload, newFilePath, (err) => {
-                if (err) throw err;
+                if (err) console.log(err);
                 var result = {}
                 
       
