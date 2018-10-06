@@ -111,10 +111,10 @@ Upload.prototype.upload = function(req, res, next){
           
 
           fs.rename(targetPath, this.dirToUpload, (err) => {
-            if (err) throw err;
+            if (err) console.log(err);
 
             fs.rename(this.dirToUpload, newFilePath, (err) => {
-              if (err) throw err;
+              if (err) console.log(err);
               
                 this.User.findOne({_id: userID})
                .then(user => {
