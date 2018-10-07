@@ -108,10 +108,10 @@ Upload.prototype.upload = function(req, res, next){
           }
           
 
-          fs.rename(targetPath, this.dirToUpload, (err) => {
+          fs.readFile(targetPath, (err, data) => {
             if (err) console.log(err);
 
-            fs.rename(this.dirToUpload, newFilePath, (err) => {
+            fs.writeFile(newFilePath, data, (err) => {
               if (err) console.log(err);
               
                 this.User.findOne({_id: userID})
@@ -176,10 +176,10 @@ Upload.prototype.uploadResult = function(req, res, next){
             this.dirToUpload  = path.join(this.dirToUpload,'/',files.file.name);
       
             //-- this uploads the result sheet
-            fs.rename(targetPath, this.dirToUpload, (err) => {
+            fs.readFile(targetPath, (err, data) => {
               if (err) console.log(err);
       
-              fs.rename(this.dirToUpload, newFilePath, (err) => {
+              fs.writeFile(newFilePath, data, (err) => {
                 if (err) console.log(err);
                 var result = {}
                 
