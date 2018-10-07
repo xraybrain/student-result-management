@@ -92,7 +92,6 @@ Upload.prototype.upload = function(req, res, next){
       fs.readdir(this.dirToUpload, (err, dirFiles) => {
           var totalDirFiles = dirFiles.length;
           var newFileName;
-          var newResultName;
 
           newFileName = 'xb' + (totalDirFiles + 1) + fileExt;
           
