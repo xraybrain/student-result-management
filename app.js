@@ -106,6 +106,11 @@ app.get('/signup/success', (req, res) => {
   res.render('signup/success');
 });
 
+//-- This redirects users visiting unmatched routes to the homepage
+app.all('*', (req, res) => {
+  res.redirect('/');
+})
+
 // Server Port
 const port = process.env.PORT || 3000;
 

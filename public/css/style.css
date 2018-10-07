@@ -46,6 +46,18 @@ html {
   opacity: 0.97;
 }
 
+.logo {
+  position: relative;
+  width: 100px;
+  height: 100px;
+
+}
+.logo img {
+  position: absolute;
+  width: 100px;
+  height: 100px;
+}
+
 .center-menu {
   margin-left: -80px;
   width: 100px;
