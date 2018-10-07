@@ -107,7 +107,7 @@
                   <select name="year2" class="form-control" required>
                     <option value="">Select academic year</option>
                     <script>
-                      var year = (new Date()).getFullYear();
+                      var year = (new Date()).getFullYear() + 1;
                       for(var i = year; i >= 2016; i--){
                         document.write('<option value="' + i + '">' + i + "</option>");
                       }
