@@ -23,6 +23,10 @@ const CompositeSheetLog = mongoose.model('compositesheetlog');
 require('../models/Student');
 const Student = mongoose.model('students');
 
+//-- Load the Lecturer model
+require('../models/Lecturer');
+const Lecturer = mongoose.model('lecturers');
+
 const validator = require('../utils/validate');
 
 //--
@@ -438,4 +442,39 @@ router.post('/computeresult/', (req, res) => {
   });
 });
 
+
+//-- Activate Lecturer account route
+router.get('/activateaccounts', ensureAuthenticated, (req, res) => {
+  Lecturer.find({active: 0})
+   .then(lecturers => {
+     if(lecturers){
+       res.render('admin/activate_accounts',{
+         lecturers: lecturers
+       });
+     }
+   })
+});
+
+//-- Process Activate
+router.put('/activateaccount/:id', ensureAuthenticated, (req, res)=>{
+  let lecturerId = req.params.id;
+
+  Lecturer.findOne({_id: lecturerId})
+    .then(lecturer => {
+      if(lecturer){
+        lecturer.active = 1;
+        lecturer.save()
+         .then(lecturer => {
+          req.flash('page_success_msg', `Account for ${lecturer.lastName} has been Activated!`);
+          res.redirect('/admin/activateaccounts');
+         })
+      } else {
+        eq.flash('page_error_msg', 'Lecturer not found');
+        res.redirect('/admin/activateaccounts');
+      }
+    })
+    .catch(err => {
+      console.log(err);
+    });
+})
 module.exports = router;

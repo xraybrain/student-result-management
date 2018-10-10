@@ -28,7 +28,7 @@ function ensureIsActivated(req, res, next){
         .then(user => {
           if(user){
             if(user.active === 1){
-              return next;
+              return next();
             } else{
               req.flash('page_error_msg', 'Sorry Your Account is not yet activated, contact the admin.');
               res.redirect('/');

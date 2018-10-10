@@ -1,0 +1,29 @@
+<div class="container row">
+  {{>_admin_sidebar}}
+  <section class="col-md-9">
+    {{>_page_msg}}
+    <div class="card mt-5 mx-auto box">
+      <h3 class="card-header text-center text-light bg-dark">UnActivated Accounts</h3>
+      {{#if lecturers}}
+      <table class="table">
+        {{#each lecturers}}
+          <tr>
+            <td>{{firstName}}</td>
+             <td>{{lastName}}</td>
+             <td><form method="POST" action="/admin/activateaccount/{{_id}}?_method=PUT">
+             <input type="hidden" name="_method" value="PUT"/>
+
+             <input type="submit" name="submit" value="Activate" class="btn btn-success"/>
+             </form> </td>
+          </tr>
+        {{else}}
+
+        {{/each}}
+      </table>
+      {{else}}
+        <p class="col-md-10 mx-auto">No unactivated account.</p>
+
+      {{/if}}
+    </div>
+  </section>
+</div>
