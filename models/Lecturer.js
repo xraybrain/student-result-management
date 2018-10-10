@@ -32,6 +32,11 @@ const LecturerSchema = new Schema({
     type: String,
     default: "lecturer"
   }
+  ,
+  active: {
+    type:Number,
+    default: 0
+  }
 });
 
 mongoose.model('lecturers', LecturerSchema);

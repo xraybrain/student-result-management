@@ -58,6 +58,39 @@ html {
   height: 100px;
 }
 
+.x-btn{
+  height: 100px;
+  margin-left: 50px;
+  background-color: rgba(165, 97, 9, 0.979);
+  color: #ffffff;
+  text-align: center;
+  position: relative;
+  margin-bottom: 2px;
+}
+.x-btn span {
+  position: absolute;
+  left: 10%;
+  right: 10%;
+  top: 30%;
+  bottom: 50%;
+}
+.x-btn:hover{
+  text-decoration: none;
+  color: #9e1414;
+  background-color: rgba(165, 97, 9, 0.726);
+  font-weight: 430;
+}
+
+.settings-box{
+  position: absolute;
+  left: -150px;
+  border: 2px solid rgba(148, 99, 8, 0.603);
+}
+
+.settings-box li a{
+  font-size: 80%;
+}
+
 .center-menu {
   margin-left: -80px;
   width: 100px;

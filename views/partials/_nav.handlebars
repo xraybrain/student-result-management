@@ -18,7 +18,7 @@
         </ul>
         <ul class="navbar-nav ml-auto">
         {{#if user}}
-          {{#if Lecturer}}
+          {{#if lecturer}}
           <li class="nav-item">
             <a class="nav-link btn btn-sm btn-light" href="/lecturer/uploadresult" title="result">Upload</a>
           </li>
@@ -34,7 +34,7 @@
             {{else}}
             <img src="/img/user.png" class="thumbnail" data-toggle="dropdown"/>
             {{/if}}
-            <ul class="dropdown-menu center-menu text-center">
+            <ul class="dropdown-menu text-center settings-box">
               <li class="presentation"><a href="/{{user.userType}}/" class="dropdown-item">{{fullName}}</a></li>
               <li class="presentation"><a href="/{{user.userType}}/logout" class="dropdown-item">Logout</a></li>
             </ul>

@@ -1,0 +1,34 @@
+<section class="col-md-8 mx-auto">
+<div class="card" id="profile">
+      <h3 class="card-header text-center text-light bg-dark">Profile</h3>
+      <img class="card-img-top passport" src="{{pictureDir}}"/>
+      <div class="card-body">
+        <table class="table table-responsive table-no-border">
+          <tr>
+            <td>Matriculation Number</td>
+            <td><span class="badge bg-dark text-light text-left col-md-12">{{user.regNo}}</span></td>
+          </tr>
+          <tr>
+            <td>Level</td>
+            <td><span class="badge bg-dark text-light text-left col-md-12">{{user.level}}</span></td>
+          </tr>
+          <tr>
+            <td>Email Address</td>
+            <td><span class="badge bg-dark text-light text-left col-md-12">{{user.emailAddress}}</span></td>
+          </tr>
+          <tr>
+            <td>Firstname</td>
+            <td><span class="badge bg-dark text-light text-left col-md-12">{{user.firstName}}</span></td>
+          </tr>
+          <tr>
+            <td>Lastname</td>
+            <td><span class="badge bg-dark text-light text-left col-md-12">{{user.lastName}}</span></td>
+          </tr>
+        </table>
+      </div>
+      <div class="card-footer text-right">
+        <a class="btn btn-dark" href="/student/changepassword">Change Password</a>
+        <a class="btn btn-dark" href="/student/editprofile">Edit Profile</a>
+      </div>
+    </div>
+</section>

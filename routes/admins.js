@@ -33,7 +33,11 @@ const Compute = require('../utils/Compute');
 require('../models/Admin');
 const Admin = mongoose.model('admin');
 
-//-- 
+//-- load the notification model
+require('../models/Notification');
+const Notification = mongoose.model('notifications');
+
+//-- Load the file uploader class
 var Uploader = require('../utils/Uploader');
 
 //-- **********************************************
@@ -65,7 +69,7 @@ router.get('/signup', (req, res) => {
 
 //-- **********************************************
 //-- Process Signup
-router.post('/signup', (req, res) => {
+router.post('/signup', ensureAuthenticated, ensureIsAdmin, (req, res) => {
   let errors = [];
 
   if(!validator.isRealName(req.body.firstName)){
@@ -119,14 +123,14 @@ router.post('/signup', (req, res) => {
             confirmPassword: req.body.confirmPassword
           } )
         }else{
-            // hash password
+            //-- hash password
             bcrypt.genSalt(10, (err, salt) => {
               bcrypt.hash(newAdmin.password, salt, (err, hash) => {
                 if (err) throw err;
                 newAdmin.password = hash;
                 newAdmin.save()
                   .then(admin => {
-                    res.render('signup/success');
+                    res.render('/admin/login');
                   })
                   .catch(err => {
                     console.log(err);
@@ -293,7 +297,8 @@ router.post('/upload', ensureAuthenticated, ensureIsAdmin,(req, res, next) => {
 //-- dashboard route
 router.get('/dashboard/', ensureAuthenticated, ensureIsAdmin,(req, res) => {
   res.render('admin/dashboard', {
-    dashboardHandler: true
+    dashboardHandler: true,
+    notice: true
   });
 });
 

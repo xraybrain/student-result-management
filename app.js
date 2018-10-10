@@ -91,14 +91,18 @@ app.use('/admin', admins);
 // Index route
 app.get('/', (req, res) => {
   let student;
+  let lecturer;
+
   if(req.user){
-    student = req.user.userType === "student" ? true : false;
+    student  = req.user.userType === "student" ? true : false;
+    lecturer = req.user.userType === "lecturer" ? true : false;
   }
   
 
   res.render('index', {
     pageTitle: 'Student Result Management',
-    student
+    student,
+    lecturer
   });
 });
 
@@ -109,7 +113,8 @@ app.get('/signup/success', (req, res) => {
 //-- This redirects users visiting unmatched routes to the homepage
 app.all('*', (req, res) => {
   res.redirect('/');
-})
+});
+
 
 // Server Port
 const port = process.env.PORT || 3000;

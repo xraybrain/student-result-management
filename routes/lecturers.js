@@ -8,17 +8,21 @@ const path     = require('path');
 
 const validator = require('../utils/validate');
 
-const {ensureAuthenticated, ensureIsAdmin} = require('../utils/auth');
+const {ensureAuthenticated, ensureIsActivated} = require('../utils/auth');
 
 const {buildResultSchema, buildSchemaDoc} = require('../utils/ModelBuilder');
 
 const excel      = require('../utils/excel-reader');
 
-// require lecturer model
+//-- require lecturer model
 require('../models/Lecturer');
 const Lecturer = mongoose.model('lecturers');
 
-// require resultslog model
+//-- load the notification model
+require('../models/Notification');
+const Notification = mongoose.model('notifications');
+
+//-- require resultslog model
 require('../models/ResultsLog');
 const  ResultsLog = mongoose.model('resultslog');
 
@@ -26,7 +30,7 @@ const  ResultsLog = mongoose.model('resultslog');
 var Uploader = require('../utils/Uploader');
 
 //-- Index route
-router.get('/', ensureAuthenticated, (req, res) => {
+router.get('/', ensureAuthenticated, ensureIsActivated, (req, res) => {
   var pictureDir = req.user.pictureDir;
   if (!pictureDir){
     pictureDir = '/img/user.png';
@@ -39,14 +43,14 @@ router.get('/', ensureAuthenticated, (req, res) => {
 });
 
 //-- Change Password Route
-router.get('/changepassword',ensureAuthenticated, (req, res) => {
+router.get('/changepassword',ensureAuthenticated, ensureIsActivated, (req, res) => {
   res.render('lecturer/change_password', {
     user: req.user
   });  
 });
 
 //-- Edit Profile Route
-router.get('/editprofile', ensureAuthenticated, (req, res) => {
+router.get('/editprofile', ensureAuthenticated, ensureIsActivated, (req, res) => {
   var pictureDir = req.user.pictureDir;
   if (!pictureDir){
     pictureDir = '/img/user.png';
@@ -59,7 +63,7 @@ router.get('/editprofile', ensureAuthenticated, (req, res) => {
 
 
 //-- Process Change Password
-router.put('/', ensureAuthenticated, (req, res) => {
+router.put('/', ensureAuthenticated, ensureIsActivated, (req, res) => {
   userID = req.user.id;
   Lecturer.findOne({_id: userID})
     .then(user => {
@@ -106,7 +110,7 @@ router.put('/', ensureAuthenticated, (req, res) => {
 });
 
 //-- Process Edit Profile
-router.put('/editprofile', ensureAuthenticated, (req, res) => {
+router.put('/editprofile', ensureAuthenticated, ensureIsActivated, (req, res) => {
   const userID = req.user.id;
   let errors = [];
   var pictureDir = req.user.pictureDir;
@@ -159,7 +163,7 @@ router.put('/editprofile', ensureAuthenticated, (req, res) => {
 
 
 //-- process file upload
-router.post('/upload', (req, res, next) => {
+router.post('/upload', ensureAuthenticated, ensureIsActivated,(req, res, next) => {
 
   var upload = new Uploader(path.join(__dirname, '../', 'public/uploads/lecturers'), '/uploads/lecturers/',{
     successRedirect: '/lecturer/',
@@ -170,12 +174,12 @@ router.post('/upload', (req, res, next) => {
 });
 
 //-- Upload result route
-router.get('/uploadresult', ensureAuthenticated, (req, res) => {
+router.get('/uploadresult', ensureAuthenticated, ensureIsActivated, (req, res) => {
   res.render('lecturer/upload_result');
 });
 
 //-- Preview Result Upload
-router.post('/uploadresult', (req, res, next) => {
+router.post('/uploadresult', ensureAuthenticated, ensureIsActivated, (req, res, next) => {
   var upload = new Uploader(path.join(__dirname,'..//private/results'), null,{
     successRedirect: '/lecturer/',
     failureRedirect: '/lecturer/uploadresult',
@@ -184,7 +188,7 @@ router.post('/uploadresult', (req, res, next) => {
   upload.uploadResult(req, res, next);
 });
 //-- Process uploaded result
-router.post('/submitresult', (req, res) => {
+router.post('/submitresult', ensureAuthenticated, ensureIsActivated, (req, res) => {
   const ResultSchema = buildResultSchema(req.body.resultName);
   var resultData = [];
   
@@ -218,11 +222,6 @@ router.post('/submitresult', (req, res) => {
       res.redirect('/lecturer/uploadresult')
     }
    })
-  
-});
-
-//-- Compute result route
-router.get('/computeresult/', (req, res) => {
   
 });
 
@@ -272,7 +271,9 @@ router.post('/signup', (req, res)=>{
       password: req.body.password,
       pictureDir: ''
     });
-    
+    const newNotification = new Notification({
+      message: `New Lecturer ${newLecturer.firstName} ${newLecturer.lastName} has registered.`
+    });
     //-- Ensures that no two lecturers has the same email
     Lecturer.findOne({emailAddress: newLecturer.emailAddress})
       .then(lecturer => {
@@ -297,7 +298,8 @@ router.post('/signup', (req, res)=>{
               newLecturer
                 .save()
                 .then(lecturer => {
-                  res.redirect('/signup/success')
+                  newNotification.save();
+                  res.redirect('/lecturer/login')
                 });
             });
           });
@@ -320,7 +322,7 @@ router.post('/login', (req, res, next) => {
     successRedirect: '/',
     failureRedirect: '/lecturer/login',
     failureFlash: true
-  }, strategy)(req, res, next);
+  })(req, res, next);
 });
 
 //-- Logout Route
