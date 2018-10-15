@@ -1,0 +1,36 @@
+<div class="container row">
+  {{>_admin_sidebar}}
+  <section class="col-md-9">
+    {{>_page_msg}}
+    <div class="card mt-2 mx-auto">
+      <h3 class="card-header text-center text-light bg-dark">Registered Lecturers</h3>
+      <div class="box">
+        {{#if lecturers}}
+        <div class="container">
+          {{#each lecturers}}
+          <div class="row mt-2">
+            <div class="col-md-4">
+              {{firstName}}
+            </div>
+            <div class="col-md-4">
+              {{lastName}}
+            </div>
+            <div class="col-md-4">
+              {{#if pictureDir}}
+                <img src="{{pictureDir}}" class="thumbnail" title="{{firstName}}"/>
+              {{else}}
+                <img src="/img/user.png" class="thumbnail" title="{{firstName}}"/>
+              {{/if}}
+            </div>
+          </div>
+          {{else}}
+
+          {{/each}}
+        </div>
+        {{else}}
+        <p class="text-warning text-center">No Registered Lecturer</p>
+        {{/if}}
+      </div>
+    </div>
+  </section>
+</div>

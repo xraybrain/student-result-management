@@ -1,0 +1,28 @@
+<div class="container row">
+  {{>_admin_sidebar}}
+  <section class="col-md-9">
+    {{>_page_msg}}
+    <div class="card" id="notice">
+      <h3 class="card-header text-center text-light bg-dark">Notifications</h3>
+      <div class="card-body">
+        {{#if notifications}}
+        {{#each notifications}}
+          <div class="row">
+            <div class="col-md-8">
+              <a href="/admin/activateaccounts/#" class="notice-text">{{message}}</a>
+            </div>
+            <div class="col-md-2">
+              <a href="/admin/notifications/delete/{{_id}}" class="btn btn-sm btn-danger mt-1">Delete</a>
+            </div>
+          </div>
+        {{else}}
+
+        {{/each}}
+
+        {{else}}
+          <p class="text-warning text-center">No notifications</p>
+        {{/if}}
+      </div>
+    </div>
+  </section>
+</div>

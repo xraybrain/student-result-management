@@ -5,7 +5,13 @@ const NotificationSchema = new Schema({
   message: {
     type: String,
     required: true
-  },
+  }
+  ,
+  seen: {
+    type: Number,
+    default: 0
+  }
+  ,
   date: {
     type: Date,
     default: Date.now

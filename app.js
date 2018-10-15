@@ -116,6 +116,15 @@ app.all('*', (req, res) => {
 });
 
 
+// notifier.delete("5bbf45de800ea114586a309a").then(status =>{
+//   if(status){
+//     console.log("good")
+//   }else{
+//     console.log("bad");
+    
+//   }
+// })
+
 // Server Port
 const port = process.env.PORT || 3000;
 

@@ -4,7 +4,7 @@
         <div class="card-body">
           <div class="row">
             <a href="/admin/activateaccounts" class="col-md-3 x-btn"><span>Activate accounts</span></a>
-            <a href="#" class="col-md-3 x-btn"><span>View accounts</span></a>
+            <a href="/admin/viewlecturers" class="col-md-3 x-btn"><span>View accounts</span></a>
           </div>
         </div>
       </div>
@@ -16,7 +16,7 @@
           <div class="row">
             <a href="/admin/computeresultdetails/" class="col-md-3 x-btn"><span>Compute Results</span></a>
             <a href="#" class="col-md-3 x-btn"><span>Edit Result</span></a>
-            <a href="#" class="col-md-3 x-btn"><span>View Composite Sheet</span></a>
+            <a href="#" class="col-md-3 x-btn" data-target="#view-composite-sheet" data-toggle="modal"><span>View Composite Sheet</span></a>
           </div>
         </div>
       </div>
@@ -31,3 +31,82 @@
         </div>
       </div>
     </div>
+
+<div class="modal fade" id="view-composite-sheet">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">View Composite Sheet</h3>
+        <a href="#" class="close" data-dismiss="modal">&times;</a>
+      </div>
+      <div class="modal-body">
+        <form method="POST" action="/admin/viewcompositesheet/">
+          
+            <div class="form-group">
+              <label class="control-label col-md-5">Academic Year</label>
+              <div class="row ml-1">
+                <div class="col-md-6">
+                  <select name="year1" class="form-control" required>
+                    <option value="">Select academic year</option>
+                    <script>
+                      let academicYear1 = (new Date()).getFullYear();
+                      for(let i = academicYear1; i >= 2016; i--){
+                        document.write('<option value="' + i + '">' + i + "</option>");
+                      }
+                    </script>
+                  </select>
+                </div>
+
+              <div class="col-md-6">
+                <select name="year2" class="form-control" required>
+                  <option value="">Select academic year</option>
+                  <script>
+                    let academicYear2 = (new Date()).getFullYear() + 1;
+                    for(let i = academicYear2; i >= 2016; i--){
+                      document.write('<option value="' + i + '">' + i + "</option>");
+                    }
+                  </script>
+                </select>
+              </div>
+            </div>
+          </div>
+
+            <div class="form-group">
+
+              <div class="row">
+                <div class="col-md-6">
+                  <label class="control-label col-md-5">Level</label>
+
+                  <div class="col-md-12">
+                    <select name="level" class="form-control" required>
+                      <option value="">Select Level</option>
+                      <option value="nd1">ND1</option>
+                      <option value="nd2">ND2</option>
+                      <option value="hnd1">HND1</option>
+                      <option value="hnd2">HND2</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="col-md-6">
+                  <label class="control-label col-md-5">Session</label>
+
+                  <div class="col-md-12">
+                    <select name="session" class="form-control" required>
+                      <option value="">Select session</option>
+                      <option value="1">First Semester</option>
+                      <option value="2">Second Semester</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <input type="submit" name="compositesheet" value="View Composite Sheet" class="btn btn-success"/>
+            </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

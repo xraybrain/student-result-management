@@ -1,0 +1,37 @@
+<div class="container row">
+  {{>_admin_sidebar}}
+  <section class="col-md-9">
+    {{>_page_msg}}
+    <div class="card mt-2 mx-auto">
+      <h3 class="card-header text-center text-light bg-dark">Composite Sheet</h3>
+
+      <div class="box">
+        <table class="table table-striped">
+          <thead>
+          {{#if tableHeading}}
+          <tr>
+            {{#each tableHeading}}
+              <td>{{title}}</td>
+            {{/each}}
+          </tr>
+          {{/if}}
+          </thead>
+          <tbody>
+          {{#each resultData}}
+          <tr>
+            <td>{{regNo}}</td>
+            {{#each grades}}
+              <td>{{grade}}</td>
+            {{else}}
+
+            {{/each}}
+          </tr>
+          {{else}}
+
+          {{/each}}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+</div>

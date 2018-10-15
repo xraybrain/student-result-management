@@ -82,6 +82,8 @@ html {
 }
 
 .settings-box{
+  max-width: 200px;
+  width: 200px; 
   position: absolute;
   left: -150px;
   border: 2px solid rgba(148, 99, 8, 0.603);
@@ -91,6 +93,9 @@ html {
   font-size: 80%;
 }
 
+.notice-text {
+  text-decoration: none;
+}
 .center-menu {
   margin-left: -80px;
   width: 100px;
@@ -99,9 +104,11 @@ html {
   word-wrap: 40px
 }
 .box {
-  max-height: 450px;
+  height: 500px;
+  max-height: 650px;
   overflow: hidden;
   overflow-y: scroll;
+  overflow-x: scroll;
 }
 .center {
   width: 60%;
@@ -132,4 +139,22 @@ aside {
   margin: 15px auto;
   padding-bottom: 0;
   border-radius: 50%;
+}
+
+.logo-panel{
+  position: relative;
+}
+.logo-panel p {
+  position: absolute;
+  font-size: 50%;
+  top: 103px;
+  width: 100%;
+  padding: 1px;
+  color: #ffffff;
+}
+
+@media screen and (max-width:575px){
+  .dropdown-menu{
+    margin: 0 auto;
+  }
 }

@@ -32,6 +32,10 @@ const validator = require('../utils/validate');
 //--
 const Compute = require('../utils/Compute');
 
+//-- 
+const Formatter = require('../utils/Formatter');
+const formatter = new Formatter();
+
 
 //-- Load admin schema
 require('../models/Admin');
@@ -40,6 +44,11 @@ const Admin = mongoose.model('admin');
 //-- load the notification model
 require('../models/Notification');
 const Notification = mongoose.model('notifications');
+
+
+//-- the Notification class
+const Notifications = require('../utils/Notifications');
+const notify      = new Notifications();
 
 //-- Load the file uploader class
 var Uploader = require('../utils/Uploader');
@@ -151,14 +160,19 @@ router.post('/signup', ensureAuthenticated, ensureIsAdmin, (req, res) => {
 
 //-- admin index route
 router.get('/', ensureAuthenticated, ensureIsAdmin, (req, res) => {
-  var pictureDir = req.user.pictureDir;
+  let pictureDir = req.user.pictureDir;
+  
   if (!pictureDir){
     pictureDir = '/img/user.png';
   }
 
-  res.render('admin/index', {
-    pictureDir: pictureDir
-  });
+  notify.getTotal()
+   .then(total => {
+      res.render('admin/index', {
+        pictureDir: pictureDir,
+        notice: total
+      });
+   });
 });
 
 router.get('/logout', (req, res) => {
@@ -171,10 +185,15 @@ router.get('/logout', (req, res) => {
 
 //-- Change Password Route
 router.get('/changepassword',ensureAuthenticated, ensureIsAdmin, (req, res) => {
+  notify.getTotal()
+  .then(total => {
     res.render('admin/change_password', {
-      user: req.user
+      user: req.user,
+      notice: total
     });  
+  });
 });
+
 //-- Process Change Password
 router.put('/', ensureAuthenticated, ensureIsAdmin, (req, res) => {
   userID = req.user.id;
@@ -300,10 +319,14 @@ router.post('/upload', ensureAuthenticated, ensureIsAdmin,(req, res, next) => {
 
 //-- dashboard route
 router.get('/dashboard/', ensureAuthenticated, ensureIsAdmin,(req, res) => {
-  res.render('admin/dashboard', {
-    dashboardHandler: true,
-    notice: true
-  });
+  notify.getTotal()
+   .then(total => {
+
+      res.render('admin/dashboard', {
+        dashboardHandler: true,
+        notice: total
+      });
+   }); 
 });
 
 //-- compute result details route
@@ -476,5 +499,93 @@ router.put('/activateaccount/:id', ensureAuthenticated, (req, res)=>{
     .catch(err => {
       console.log(err);
     });
+});
+
+//-- process activation reject
+router.delete('/rejectactivation/:id', (req, res) => {
+  Lecturer.remove({_id: req.params.id})
+   .then(status => {
+     //-- an email should be sent to this use on this effect.
+     req.flash('page_success_msg', 'Account registration was rejected by admin')
+     res.redirect('/admin/activateaccounts/');
+   })
+})
+
+//-- view lecturers route
+router.get('/viewlecturers/', (req, res) => {
+  Lecturer.find({})
+    .then(lecturers => {
+      notify.getTotal()
+       .then(total => {
+        res.render('admin/view_lecturers', {
+          lecturers,
+          total
+        });
+       });
+    })
+    .catch(err => {
+      console.log(err);
+    })
+});
+
+//-- view composite sheet
+router.post('/viewcompositesheet/', ensureAuthenticated, ensureIsAdmin, (req, res) => {
+  let resultSheetName = `${req.body.level}_${req.body.year1}_${req.body.year2}_${req.body.session}`;
+  
+  CompositeSheetLog.findOne({compositeSheetTableName: resultSheetName})
+   .then(resultSheetLog => {
+     if(resultSheetLog){
+       let CompositeSheetModel = buildModel(resultSheetLog.schemaDoc, resultSheetName);
+       CompositeSheetModel.find({})
+        .sort({regNo: 'asc'})
+        .then(resultData => {
+          let result = formatter.formatCompositeSheet(resultData);
+          res.render('admin/view_composite_sheet',
+          {
+            resultData: result.formatted,
+            tableHeading: result.tableHeading
+          });
+        })
+     } else{
+       req.flash('page_success_msg', 'This Result sheet does not exist.');
+       res.redirect('/admin/dashboard');
+     }
+   })
+});
+
+//-- notifications route
+router.get('/notifications/', (req, res) => {
+  let pictureDir = req.user.pictureDir;
+  if (!pictureDir){
+    pictureDir = '/img/user.png';
+  }
+
+  notify.getAll()
+   .then(notifications => {
+      notify.getTotal()
+      .then(total => {
+        notify.unSeen();
+        res.render('admin/notifications', {
+          notifications,
+          notice: total,
+          pictureDir
+        });
+      });
+   });
+  
+});
+
+//-- delete notifications route
+router.get('/notifications/delete/:id', (req, res) => {
+  notify.delete(req.params.id)
+   .then(status => {
+     if(status){
+       req.flash('page_success_msg', 'notification deleted')
+       res.redirect('/admin/notifications/');
+     } else{
+      req.flash('page_error_msg', 'unable to delete notification')
+      res.redirect('/admin/notifications/');
+     }
+   })
 })
 module.exports = router;
