@@ -1,4 +1,3 @@
-'use strict';
 const express = require('express');
 const router  = express.Router();
 const bcrypt  = require('bcryptjs');
@@ -319,12 +318,14 @@ router.post('/upload', ensureAuthenticated, ensureIsAdmin,(req, res, next) => {
 
 //-- dashboard route
 router.get('/dashboard/', ensureAuthenticated, ensureIsAdmin,(req, res) => {
+  console.log(req.user);
   notify.getTotal()
    .then(total => {
 
       res.render('admin/dashboard', {
         dashboardHandler: true,
-        notice: total
+        notice: total,
+        pictureDir: req.user.pictureDir || "/img/user.png"
       });
    }); 
 });

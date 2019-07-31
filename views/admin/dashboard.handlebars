@@ -1,9 +1,11 @@
-<div class="container row">
-  {{>_admin_sidebar}}
-  <section class="col-md-9">
-    {{>_page_msg}}
-    {{#if dashboardHandler}}
-      {{>_admin_dashboard}}
-    {{/if}}
-  </section>
+<div class="container-fluid">
+  <div class="row">
+    {{>_admin_sidebar}}
+    <section class="col-md-10">
+      {{>_page_msg}}
+      {{#if dashboardHandler}}
+        {{>_admin_dashboard}}
+      {{/if}}
+    </section>
+  </div>
 </div>

@@ -1,36 +1,82 @@
-<div class="col-md-12 mx-auto mt-2">
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-3">
       <div class="card">
-        <h3 class="card-heading bg-dark text-light text-center">Manage Lecturers Account</h3>
         <div class="card-body">
-          <div class="row">
-            <a href="/admin/activateaccounts" class="col-md-3 x-btn"><span>Activate accounts</span></a>
-            <a href="/admin/viewlecturers" class="col-md-3 x-btn"><span>View accounts</span></a>
-          </div>
+          <img class="card-img-top" src="{{pictureDir}}"/>
+          <p class="text-small">UserName: {{user.firstName}} {{user.lastName}}</p>
+           <p class="text-small">Role: {{user.userType}}</p>
         </div>
       </div>
     </div>
-    <div class="col-md-12 mx-auto mt-2">
+    
+    <div class="col-md-9">
       <div class="card">
-        <h3 class="card-heading bg-dark text-light text-center">Manage Results</h3>
         <div class="card-body">
           <div class="row">
-            <a href="/admin/computeresultdetails/" class="col-md-3 x-btn"><span>Compute Results</span></a>
-            <a href="#" class="col-md-3 x-btn"><span>Edit Result</span></a>
-            <a href="#" class="col-md-3 x-btn" data-target="#view-composite-sheet" data-toggle="modal"><span>View Composite Sheet</span></a>
+
+            <div class="col-md-4">
+              <div class="card">
+                <div class="card-body text-center">
+                  <p>
+                    Activate new lecturers account
+                  </p>
+                  <a href="/admin/activateaccounts" class="btn btn-warning">
+                    <span>activate account</span>
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-4">
+              <div class="card">
+                <div class="card-body text-center">
+                  <p>
+                  view registered lecturers account
+                  </p>
+                  <a href="/admin/viewlecturers" class="btn btn-warning">
+                    <span>view accounts</span>
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-4">
+              <div class="card">
+                <div class="card-body text-center">
+                  <p>
+                  compute students result
+                  </p>
+                  <a href="/admin/computeresultdetails/" class="btn btn-info">
+                    <span>compute results</span>
+                  </a>
+                </div>
+              </div>
+            </div>
+
           </div>
+
+          <div class="row mt-2">
+            <div class="col-md-5">
+              <div class="card">
+                <div class="card-body text-center">
+                  <p>
+                  view students composite sheet
+                  </p>
+                  <a href="#" class="btn btn-warning" data-target="#view-composite-sheet" data-toggle="modal">
+                    view composite sheet
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div>
     </div>
-    <div class="col-md-12 mx-auto mt-2">
-      <div class="card">
-        <h3 class="card-heading bg-dark text-light text-center">Manage Feedbacks</h3>
-        <div class="card-body">
-          <div class="row">
-            <a href="#" class="col-md-3 x-btn"><span>Complaint</span></a>
-          </div>
-        </div>
-      </div>
-    </div>
+  </div>
+</div>
+
 
 <div class="modal fade" id="view-composite-sheet">
   <div class="modal-dialog">
@@ -41,28 +87,28 @@
       </div>
       <div class="modal-body">
         <form method="POST" action="/admin/viewcompositesheet/">
-          
-            <div class="form-group">
-              <label class="control-label col-md-5">Academic Year</label>
-              <div class="row ml-1">
-                <div class="col-md-6">
-                  <select name="year1" class="form-control" required>
-                    <option value="">Select academic year</option>
-                    <script>
-                      let academicYear1 = (new Date()).getFullYear();
-                      for(let i = academicYear1; i >= 2016; i--){
-                        document.write('<option value="' + i + '">' + i + "</option>");
-                      }
-                    </script>
-                  </select>
-                </div>
+
+          <div class="form-group">
+            <label class="control-label col-md-5">Academic Year</label>
+            <div class="row ml-1">
+              <div class="col-md-6">
+                <select name="year1" class="form-control" required>
+                  <option value="">Select academic year</option>
+                  <script>
+                    let academicYear1 = (new Date()).getFullYear();
+                    for (let i = academicYear1; i >= 2016; i--) {
+                      document.write('<option value="' + i + '">' + i + "</option>");
+                    }
+                  </script>
+                </select>
+              </div>
 
               <div class="col-md-6">
                 <select name="year2" class="form-control" required>
                   <option value="">Select academic year</option>
                   <script>
                     let academicYear2 = (new Date()).getFullYear() + 1;
-                    for(let i = academicYear2; i >= 2016; i--){
+                    for (let i = academicYear2; i >= 2016; i--) {
                       document.write('<option value="' + i + '">' + i + "</option>");
                     }
                   </script>
@@ -71,40 +117,40 @@
             </div>
           </div>
 
-            <div class="form-group">
+          <div class="form-group">
 
-              <div class="row">
-                <div class="col-md-6">
-                  <label class="control-label col-md-5">Level</label>
+            <div class="row">
+              <div class="col-md-6">
+                <label class="control-label col-md-5">Level</label>
 
-                  <div class="col-md-12">
-                    <select name="level" class="form-control" required>
-                      <option value="">Select Level</option>
-                      <option value="nd1">ND1</option>
-                      <option value="nd2">ND2</option>
-                      <option value="hnd1">HND1</option>
-                      <option value="hnd2">HND2</option>
-                    </select>
-                  </div>
+                <div class="col-md-12">
+                  <select name="level" class="form-control" required>
+                    <option value="">Select Level</option>
+                    <option value="nd1">ND1</option>
+                    <option value="nd2">ND2</option>
+                    <option value="hnd1">HND1</option>
+                    <option value="hnd2">HND2</option>
+                  </select>
                 </div>
+              </div>
 
-                <div class="col-md-6">
-                  <label class="control-label col-md-5">Session</label>
+              <div class="col-md-6">
+                <label class="control-label col-md-5">Session</label>
 
-                  <div class="col-md-12">
-                    <select name="session" class="form-control" required>
-                      <option value="">Select session</option>
-                      <option value="1">First Semester</option>
-                      <option value="2">Second Semester</option>
-                    </select>
-                  </div>
+                <div class="col-md-12">
+                  <select name="session" class="form-control" required>
+                    <option value="">Select session</option>
+                    <option value="1">First Semester</option>
+                    <option value="2">Second Semester</option>
+                  </select>
                 </div>
               </div>
             </div>
+          </div>
 
-            <div class="form-group">
-              <input type="submit" name="compositesheet" value="View Composite Sheet" class="btn btn-success"/>
-            </div>
+          <div class="form-group">
+            <input type="submit" name="compositesheet" value="View Composite Sheet" class="btn btn-success" />
+          </div>
         </form>
       </div>
     </div>

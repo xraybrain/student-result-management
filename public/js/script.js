@@ -94,7 +94,7 @@ var app = (function(validator, ui){
     var month = new Date().getMonth() + 1;
     var academicYear = '';
 
-    if(month >= 10 || month <= 7){
+    if(month >= 10){
       academicYear = year + glue + (year+1);
     } else {
       academicYear = year-1 + glue + (year);

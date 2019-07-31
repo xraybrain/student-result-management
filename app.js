@@ -6,6 +6,7 @@ const flash    = require('connect-flash');
 const session  = require('express-session');
 const passport = require('passport');
 const methodOverride = require('method-override');
+const hbs = require('handlebars');
 
 const {getFullName} = require('./helpers/usersHelper');
 
@@ -42,6 +43,11 @@ app.use(session({
   resave: true,
   saveUninitialized: true
 }));
+
+//-- register helpers
+hbs.registerHelper("isLecturer", (user)=>{
+  return user.userType === "lecturer";
+});
 
 //-- Passport middleware
 app.use(passport.initialize());
@@ -110,6 +116,11 @@ app.get('/signup/success', (req, res) => {
   res.render('signup/success');
 });
 
+app.use((req, res, next)=>{
+  res.locals.user = req.user || null;
+
+  next();
+})
 //-- This redirects users visiting unmatched routes to the homepage
 app.all('*', (req, res) => {
   res.redirect('/');

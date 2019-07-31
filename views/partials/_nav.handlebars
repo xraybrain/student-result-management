@@ -21,8 +21,8 @@
         </ul>
         <ul class="navbar-nav ml-auto">
         {{#if user}}
-          {{#if lecturer}}
-          <li class="nav-item">
+          {{#if (isLecturer user)}}
+          <li class="nav-item ml-2">
             <a class="nav-link btn btn-sm btn-light" href="/lecturer/uploadresult" title="result">Upload</a>
           </li>
           {{/if}}

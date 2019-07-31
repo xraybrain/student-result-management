@@ -10,6 +10,9 @@ html {
   text-rendering: optimizeLegibility;
 }
 
+body *{
+  font-size: 98% !important;
+}
 .nav--bg {
   background-color: #000000;
   color: #bf4d35 !important;
@@ -19,8 +22,8 @@ html {
   color: #ad8041 !important;
 }
 .thumbnail {
-  width: 30px;
-  height: 30px;
+  width: 50px;
+  height: 50px;
   border: 2px solid rgba(233, 227, 227, 0.37);
   border-radius: 50%;
 }
@@ -118,6 +121,9 @@ aside {
   margin-top: -10px; 
   height: 90vh;
 }
+.no-pd {
+  padding: 0;
+}
 
 /*********************************************************************
  *** Table style
@@ -145,9 +151,8 @@ aside {
   position: relative;
 }
 .logo-panel p {
-  position: absolute;
-  font-size: 50%;
-  top: 103px;
+  /* position: absolute; */
+  font-size: 50% !important;
   width: 100%;
   padding: 1px;
   color: #ffffff;
@@ -157,4 +162,32 @@ aside {
   .dropdown-menu{
     margin: 0 auto;
   }
+}
+
+
+.full-screen {
+  width: 100vw;
+  height: 70vh;
+}
+
+#myslider{
+  margin-top: -10px;
+  width: 100%;
+}
+#myslider img {
+  width: 100%;
+  height: 600px;
+}
+
+.hero-text {
+  position: absolute;
+  top: 250px;
+  left: 50%;
+  color: #fff;
+  background-image: linear-gradient(#052519, #105f1d);
+  padding: 15px;
+  border-radius: 15px;
+  border: 2px solid rgb(85, 119, 5);
+  box-shadow: 0px 0px 7px rgb(190, 188, 17);
+  text-align: center;
 }
