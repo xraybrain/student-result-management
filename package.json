@@ -25,6 +25,9 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node app.js"
   },
+  "engines": {
+    "node": "8.11.2"
+  },
   "author": "Iwuji Jude and Okpara Kenneth",
   "license": "MIT"
 }
